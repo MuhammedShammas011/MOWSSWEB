@@ -1,0 +1,5 @@
+{
+  "buildCommand": "cd mows-website && npm install && npm run build",
+  "outputDirectory": "mows-website/dist",
+  "installCommand": "echo skip"
+}
