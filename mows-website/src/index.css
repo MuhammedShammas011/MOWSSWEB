@@ -1,0 +1,273 @@
+@import "tailwindcss";
+
+:root {
+  --font-sans: 'Clash Grotesk', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ── Global reset ──────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+  --color-forest-teal: #174F50;
+  --color-amber-gold: #D89F3E;
+  --color-pure-white: #FFFFFF;
+  --color-deep-forest: #0C1E1E;
+  --color-mist-teal: #E8F4F4;
+  --color-shadow-teal: #1A3535;
+
+  --grad-classic-gold: linear-gradient(135deg, #D89F3E, #F3C363);
+  --grad-deep-teal: linear-gradient(135deg, #174F50, #0C1E1E);
+}
+
+body {
+  margin: 0;
+  color: var(--color-forest-teal);
+  font-family: 'Clash Grotesk', sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+  background-color: #fcfaf5;
+}
+
+
+@keyframes gradientMesh {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* ── Custom Scrollbar ─────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(23, 79, 80, 0.15);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(23, 79, 80, 0.3);
+}
+
+/* ── Inputs & textareas ────────────────────────────────── */
+input,
+textarea,
+select {
+  font-family: inherit;
+  color: var(--color-forest-teal);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(23, 79, 80, 0.4);
+}
+
+/* ── Typography Enhancements ─────────────────────────────────── */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  letter-spacing: -0.03em;
+  font-weight: 800;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-forest-teal) 0%, var(--color-amber-gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Animation Keyframes ────────────────────────────── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ── Animation Classes ────────────────────────────── */
+.animate-fade-up {
+  animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-scale {
+  animation: fadeScale 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-slide-right {
+  animation: slideInRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Staggered delays */
+.delay-100 {
+  animation-delay: 100ms;
+}
+
+.delay-200 {
+  animation-delay: 200ms;
+}
+
+.delay-300 {
+  animation-delay: 300ms;
+}
+
+.delay-400 {
+  animation-delay: 400ms;
+}
+
+.delay-500 {
+  animation-delay: 500ms;
+}
+
+/* Route transition */
+main>* {
+  animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── Button base reset ─────────────────────────────────── */
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+::selection {
+  background: rgba(216, 159, 62, 0.2);
+  color: var(--color-forest-teal);
+}
+
+/* ── Glass Apple Water Styling ──────────────────────────── */
+.glass-panel {
+  background: rgba(232, 244, 244, 0.7) !important;
+  /* Mist Teal with opacity */
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  box-shadow: 0 20px 40px rgba(23, 79, 80, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+}
+
+.glass-panel-heavy {
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(50px) saturate(200%);
+  -webkit-backdrop-filter: blur(50px) saturate(200%);
+  border: 1px solid rgba(232, 244, 244, 0.8) !important;
+  box-shadow: 0 30px 60px rgba(23, 79, 80, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+}
+
+.glass-input {
+  background: rgba(255, 255, 255, 0.3) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+}
+
+.glass-input:focus {
+  background: rgba(255, 255, 255, 0.6) !important;
+  border-color: rgba(23, 79, 80, 0.4) !important;
+}
+
+@media (max-width: 768px) {
+  body {
+    font-size: 15px;
+  }
+}
+
+/* ── Hero Flockd Inspired Styling ──────────────────────────── */
+.text-mask-bg {
+  background-image: url('/hero-bg.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  /* Parallax effect inside text */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+/* Hide scrollbar for ticket layout */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
