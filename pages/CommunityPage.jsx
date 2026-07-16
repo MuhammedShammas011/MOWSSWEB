@@ -15,7 +15,7 @@ const events = [
 const typeColors = { Networking: '#C8F04A', Workshop: '#60b4ff', Talk: '#ff8c6b', Social: '#c084fc', Showcase: '#34d399' };
 
 const blog = [
-  { date: 'Apr 28', title: 'Why Kochi is becoming South India's startup hub', tag: 'Ecosystem', read: '4 min' },
+  { date: 'Apr 28', title: "Why Kochi is becoming South India's startup hub", tag: 'Ecosystem', read: '4 min' },
   { date: 'Apr 15', title: 'How 3 Mows members landed their first clients from the common area', tag: 'Member stories', read: '3 min' },
   { date: 'Apr 2', title: 'Hot desk vs dedicated desk: which is right for you?', tag: 'Guide', read: '5 min' },
 ];
