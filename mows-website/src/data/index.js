@@ -1,4 +1,4 @@
-import mowsOutsideImg from '../assets/MowsOutside image.png';
+import mowsOutsideImg from '../assets/MowsOutsideimage1.png';
 import kozhikodeImg from '../assets/Kozhikode.png';
 import perinthalmannaImg from '../assets/perinthalmanna.png';
 
