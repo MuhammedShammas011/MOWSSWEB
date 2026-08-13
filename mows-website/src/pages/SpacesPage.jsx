@@ -296,11 +296,8 @@ export default function SpacesPage({ onNavigate }) {
                   paddingLeft: '16px',
                   paddingRight: '16px',
                   paddingBottom: '2rem',
-                  scrollSnapType: 'x mandatory',
-                  msOverflowStyle: 'none',
-                  scrollbarWidth: 'none'
+                  scrollSnapType: 'x mandatory'
                 }}
-                className="no-scrollbar"
               >
                 {plans.filter(p => !annual || (p.id !== 'daily' && p.id !== '15day')).map((plan, i) => {
                   const mPrice = plan.monthlyPrice ? Math.round(plan.monthlyPrice * multiplier) : null;

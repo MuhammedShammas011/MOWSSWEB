@@ -1,9 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { locations, amenities, testimonials } from '../data';
 import { motion, AnimatePresence } from 'framer-motion';
 import FlowArt, { FlowSection } from '../components/ui/story-scroll';
 import AnimatedCityScene from '../components/AnimatedCityScene';
 import LocationIcon from '../assets/LocationBlack.png';
+import heroImg1 from '../assets/SpaceDemo-1.jpg';
+import heroImg2 from '../assets/SpaceDemo-2.jpg';
+import heroImg3 from '../assets/SpaceDemo-3.jpg';
+import heroImg4 from '../assets/SpaceDemo-4.jpg';
+import heroImg5 from '../assets/SpaceDemo-5.jpg';
+import eventImg1 from '../assets/Events-1.jpg';
+import eventImg2 from '../assets/Events-2.jpg';
+import eventImg3 from '../assets/Events-3.jpg';
+import eventImg4 from '../assets/Events-4.jpg';
 
 const accent = 'var(--color-amber-gold)';
 const textDark = 'var(--color-forest-teal)';
@@ -39,7 +48,30 @@ const HoverText = ({ text }) => (
   </>
 );
 
+// 3 distinct image pools so they never overlap
+const col0Images = [heroImg1, heroImg2, eventImg1];
+const col1Images = [heroImg3, heroImg4, eventImg2];
+const col2Images = [heroImg5, eventImg3, eventImg4];
+
 export default function HomePage({ onNavigate }) {
+  // Each column has its own independent image index + different interval
+  const [col0, setCol0] = useState(0);
+  const [col1, setCol1] = useState(0);
+  const [col2, setCol2] = useState(0);
+
+  useEffect(() => {
+    const t0 = setInterval(() => setCol0(p => (p + 1) % col0Images.length), 2000);
+    return () => clearInterval(t0);
+  }, []);
+  useEffect(() => {
+    const t1 = setInterval(() => setCol1(p => (p + 1) % col1Images.length), 3100);
+    return () => clearInterval(t1);
+  }, []);
+  useEffect(() => {
+    const t2 = setInterval(() => setCol2(p => (p + 1) % col2Images.length), 2500);
+    return () => clearInterval(t2);
+  }, []);
+
   return (
     <FlowArt className="w-full overflow-x-hidden" aria-label="Mows HomePage Flow">
 
@@ -48,6 +80,8 @@ export default function HomePage({ onNavigate }) {
         aria-label="Hero"
         style={{
           backgroundColor: '#fcfaf5',
+          backgroundImage: 'linear-gradient(rgba(19, 34, 28, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(19, 34, 28, 0.05) 1px, transparent 1px)',
+          backgroundSize: '24px 24px',
           padding: 0,
           justifyContent: 'center',
           alignItems: 'center',
@@ -180,6 +214,47 @@ export default function HomePage({ onNavigate }) {
             </motion.div>
           </motion.div>
 
+
+
+          <motion.div
+            initial={{ opacity: 0, x: 60 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.9, delay: 0.3, ease: 'easeOut' }}
+            style={{
+              flex: 1,
+              minWidth: 320,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'relative',
+            }}
+          >
+            {/* 3-column gallery — each column changes independently */}
+            <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+              {[
+                { idx: col0, pool: col0Images, mt: 0 },
+                { idx: col1, pool: col1Images, mt: 40 },
+                { idx: col2, pool: col2Images, mt: 0 },
+              ].map((col, pos) => (
+                <div key={pos} style={{ position: 'relative', width: 200, flexShrink: 0, marginTop: col.mt }}>
+                  <div style={{ border: '4px solid #13221C', boxShadow: '10px 10px 0px #13221C', overflow: 'hidden', width: '100%', aspectRatio: '9 / 16', position: 'relative', backgroundColor: '#13221C' }}>
+                    <AnimatePresence mode="popLayout">
+                      <motion.img
+                        key={`col${pos}-${col.idx}`}
+                        src={col.pool[col.idx]}
+                        alt={`Space col ${pos}`}
+                        initial={{ opacity: 0, zIndex: 1 }}
+                        animate={{ opacity: 1, zIndex: 1 }}
+                        exit={{ opacity: 1, zIndex: 0 }}
+                        transition={{ duration: 0.8 }}
+                        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                      />
+                    </AnimatePresence>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
 
         </div>
       </FlowSection>

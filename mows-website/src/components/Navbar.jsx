@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { navLinks } from '../data';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import fullLogo from '../assets/FullLogo Mows.png';
 
 const textDark = 'var(--color-forest-teal)';
 const textLight = 'rgba(23, 79, 80, 1)';
@@ -96,7 +97,7 @@ export default function Navbar({ currentPage, onNavigate }) {
               style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', padding: 0 }}
               className="interactive"
             >
-              <span style={{ fontSize: '1.2rem', fontWeight: 700, color: '#13221C', letterSpacing: '-0.02em' }}>MY OWN   WORK   SPACE</span>
+              <img src={fullLogo} alt="MOWS Logo" style={{ height: '45px', width: 'auto', display: 'block' }} />
             </motion.button>
           </div>
 
