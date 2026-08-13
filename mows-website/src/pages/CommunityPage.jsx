@@ -305,7 +305,7 @@ export default function CommunityPage({ onNavigate }) {
                         fontSize: 14,
                         fontWeight: 900,
                         cursor: 'pointer',
-                        transition: 'transform 0.1s, box-shadow 0.1s',
+                        transition: 'transform 0.2s, box-shadow 0.1s',
                         textTransform: 'uppercase',
                         boxShadow: '4px 4px 0px #13221C'
                       }}
