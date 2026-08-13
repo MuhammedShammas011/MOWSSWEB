@@ -51,7 +51,7 @@ export default function Footer({ onNavigate }) {
 
             <div style={{ display: 'inline-block', background: '#fff', color: '#13221C', padding: '12px 24px', border: '2px solid #13221C', borderRadius: 8, boxShadow: '4px 4px 0 #13221C', marginBottom: '3rem' }}>
               <p style={{ fontSize: 16, fontWeight: 800, margin: 0 }}>info@mows.in</p>
-              <p style={{ fontSize: 16, fontWeight: 800, margin: 0 }}>+91  9778  27. 6121</p>
+              <p style={{ fontSize: 16, fontWeight: 800, margin: 0 }}>+91  9778  27 6121</p>
             </div>
 
             <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
