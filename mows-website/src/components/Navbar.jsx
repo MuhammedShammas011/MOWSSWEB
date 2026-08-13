@@ -96,7 +96,7 @@ export default function Navbar({ currentPage, onNavigate }) {
               style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', padding: 0 }}
               className="interactive"
             >
-              <span style={{ fontSize: '1.2rem', fontWeight: 700, color: '#13221C', letterSpacing: '-0.02em' }}>MOWS</span>
+              <span style={{ fontSize: '1.2rem', fontWeight: 700, color: '#13221C', letterSpacing: '-0.02em' }}>MY OWN   WORK   SPACE</span>
             </motion.button>
           </div>
 

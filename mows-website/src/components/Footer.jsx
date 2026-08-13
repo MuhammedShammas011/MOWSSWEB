@@ -29,15 +29,15 @@ export default function Footer({ onNavigate }) {
   }
 
   return (
-    <footer style={{ 
-      backgroundColor: '#fcfaf5', 
+    <footer style={{
+      backgroundColor: '#fcfaf5',
       backgroundImage: 'linear-gradient(rgba(19, 34, 28, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(19, 34, 28, 0.05) 1px, transparent 1px)',
       backgroundSize: '24px 24px',
-      color: '#13221C', 
-      position: 'relative', 
-      overflow: 'hidden', 
-      fontFamily: "'Clash Grotesk', sans-serif", 
-      borderTop: '6px solid #13221C' 
+      color: '#13221C',
+      position: 'relative',
+      overflow: 'hidden',
+      fontFamily: "'Clash Grotesk', sans-serif",
+      borderTop: '6px solid #13221C'
     }}>
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1400, margin: '0 auto', padding: '6rem 4rem 2rem' }}>
@@ -51,7 +51,7 @@ export default function Footer({ onNavigate }) {
 
             <div style={{ display: 'inline-block', background: '#fff', color: '#13221C', padding: '12px 24px', border: '2px solid #13221C', borderRadius: 8, boxShadow: '4px 4px 0 #13221C', marginBottom: '3rem' }}>
               <p style={{ fontSize: 16, fontWeight: 800, margin: 0 }}>info@mows.in</p>
-              <p style={{ fontSize: 16, fontWeight: 800, margin: 0 }}>+91  9778  2  7121</p>
+              <p style={{ fontSize: 16, fontWeight: 800, margin: 0 }}>+91  9778  27. 6121</p>
             </div>
 
             <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
