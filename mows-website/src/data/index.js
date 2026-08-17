@@ -48,12 +48,8 @@ export const locations = [
 ];
 
 export const plans = [
-  { id: 'daily', name: 'Daily Pass', icon: '🎫', monthlyPrice: 350, annualPrice: 3000, desc: 'Access to facilities for a single day including shared spaces.', features: ['High-speed internet', 'Shared spaces', 'Amenities'], missing: ['Dedicated desk', 'Storage locker'] },
-  { id: '15day', name: '15-Day Pass', icon: '📆', monthlyPrice: 2500, annualPrice: 3000, desc: 'Ideal for short-term projects providing full access to shared spaces.', features: ['High-speed internet', 'Shared spaces', 'Amenities'], missing: ['Dedicated desk', 'Storage locker'] },
-  { id: 'monthly_basic', name: 'Monthly Basic', icon: '🪑', monthlyPrice: 4800, annualPrice: 3000, desc: 'Flexible monthly access to group working spaces.', features: ['High-speed internet', '4 meeting room hours/mo', '1 tea/coffee per day'], missing: ['Dedicated desk', 'Storage locker'] },
-  { id: 'monthly_pro', name: 'Monthly Pro', icon: '🖥️', monthlyPrice: 5300, annualPrice: 3000, desc: 'Premium monthly access to group working spaces.', features: ['High-speed internet', '6 meeting room hours/mo', '1 tea/coffee per day'], missing: ['Private cabin'], popular: true },
-  { id: 'cabin', name: 'Single Cabin', icon: '🚪', monthlyPrice: 5999, annualPrice: 3000, desc: 'Secure, dedicated private cabin for focused work.', features: ['Private cabin', '8 meeting room hours/mo', '1 tea/coffee per day', 'Secure storage'], missing: [] },
-  { id: 'group', name: 'Group Space', icon: '🏢', monthlyPrice: 14000, annualPrice: 3000, desc: 'Access to group working spaces for teams.', features: ['Dedicated group space', 'High-speed internet', 'All shared amenities'], missing: [] },
+  { id: 'daily', name: 'Daily Pass', icon: '🎫', monthlyPrice: 400, annualPrice: 3000, desc: 'Access to facilities for a single day including shared spaces.', features: ['High-speed internet', 'Shared spaces', 'Amenities'], missing: ['Dedicated desk', 'Storage locker'] },
+  { id: 'monthly_basic', name: 'Monthly Basic', icon: '🪑', monthlyPrice: 4800, annualPrice: 3000, desc: 'Flexible monthly access to group working spaces.', features: ['High-speed internet', '4 meeting room hours/mo', '1 tea/coffee per day'], missing: ['Dedicated desk', 'Storage locker'], popular: true },
   { id: 'custom', name: 'Custom Package', icon: '💼', monthlyPrice: null, annualPrice: null, desc: 'Tailored office solutions for large teams and custom requirements.', features: ['Custom layout & branding', 'Dedicated internet bandwidth', '24/7 access control', 'Dedicated support manager'], missing: [] }
 ];
 

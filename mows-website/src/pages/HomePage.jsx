@@ -88,21 +88,16 @@ export default function HomePage({ onNavigate }) {
           minHeight: '100vh',
         }}
       >
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          width: '100%',
-          padding: '0 4vw',
-          gap: '1rem',
-          minHeight: '100vh',
-        }}>
+        <div 
+          className="flex flex-col md:flex-row items-center md:justify-start w-full gap-12 md:gap-4 pt-32 pb-20 md:pt-0 md:pb-0"
+          style={{ minHeight: '100vh', padding: '0 4vw' }}
+        >
           {/* Text Content */}
           <motion.div
             initial="hidden"
             animate="visible"
             variants={containerVariants}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left', gap: '1.5rem', maxWidth: 800, marginTop: '-10vh' }}
+            className="flex flex-col items-start text-left gap-6 max-w-[800px] mt-0 md:mt-[-10vh]"
           >
             {/* Badge */}
             <motion.div variants={itemVariants} style={{
@@ -220,23 +215,16 @@ export default function HomePage({ onNavigate }) {
             initial={{ opacity: 0, x: 60 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.9, delay: 0.3, ease: 'easeOut' }}
-            style={{
-              flex: 1,
-              minWidth: 320,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              position: 'relative',
-            }}
+            className="flex-1 w-full md:min-w-[320px] flex items-center justify-center relative mt-8 md:mt-0"
           >
             {/* 3-column gallery — each column changes independently */}
-            <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+            <div className="flex gap-2 md:gap-4 items-start w-full justify-center md:w-auto">
               {[
                 { idx: col0, pool: col0Images, mt: 0 },
-                { idx: col1, pool: col1Images, mt: 40 },
+                { idx: col1, pool: col1Images, mt: 'clamp(20px, 5vw, 40px)' },
                 { idx: col2, pool: col2Images, mt: 0 },
               ].map((col, pos) => (
-                <div key={pos} style={{ position: 'relative', width: 200, flexShrink: 0, marginTop: col.mt }}>
+                <div key={pos} className="relative w-[30%] md:w-[200px] shrink-0" style={{ marginTop: col.mt }}>
                   <div style={{ border: '4px solid #13221C', boxShadow: '10px 10px 0px #13221C', overflow: 'hidden', width: '100%', aspectRatio: '9 / 16', position: 'relative', backgroundColor: '#13221C' }}>
                     <AnimatePresence mode="popLayout">
                       <motion.img
@@ -260,11 +248,11 @@ export default function HomePage({ onNavigate }) {
       </FlowSection>
 
       {/* Section Divider */}
-      <div style={{ width: '100%', height: 6, backgroundColor: '#13221C', position: 'relative', zIndex: 10, marginTop: '-5rem' }}></div>
+      <div style={{ width: '100%', height: 6, backgroundColor: '#13221C', position: 'relative', zIndex: 10 }}></div>
 
       {/* 2. Amenities FlowSection */}
       <FlowSection aria-label="Amenities" style={{ backgroundColor: '#fcfaf5', paddingBottom: '10rem', paddingTop: '6rem', backgroundImage: 'linear-gradient(rgba(19, 34, 28, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(19, 34, 28, 0.05) 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
-        <div style={{ maxWidth: 1300, margin: 'auto', width: '100%' }}>
+        <div className="px-4 md:px-0" style={{ maxWidth: 1300, margin: 'auto', width: '100%' }}>
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -300,7 +288,7 @@ export default function HomePage({ onNavigate }) {
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={containerVariants}
-            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 24 }}
+            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))', gap: 24 }}
           >
             {amenities.map((a, i) => {
               const colors = ['#fde047', '#fca5a5', '#86efac', '#93c5fd', '#d8b4fe', '#fdba74'];
@@ -341,7 +329,7 @@ export default function HomePage({ onNavigate }) {
 
       {/* 3. Locations FlowSection */}
       <FlowSection aria-label="Locations" style={{ paddingBottom: '10rem', paddingTop: '6rem', backgroundColor: '#fcfaf5', backgroundImage: 'linear-gradient(rgba(19, 34, 28, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(19, 34, 28, 0.05) 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
-        <div style={{ maxWidth: 1300, margin: 'auto', width: '100%' }}>
+        <div className="px-4 md:px-0" style={{ maxWidth: 1300, margin: 'auto', width: '100%' }}>
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -441,7 +429,7 @@ export default function HomePage({ onNavigate }) {
         backgroundImage: 'linear-gradient(rgba(19, 34, 28, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(19, 34, 28, 0.05) 1px, transparent 1px)',
         backgroundSize: '24px 24px'
       }}>
-        <div style={{ maxWidth: 1300, margin: 'auto', width: '100%', display: 'flex', flexWrap: 'wrap', gap: '4rem', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div className="px-4 md:px-0" style={{ maxWidth: 1300, margin: 'auto', width: '100%', display: 'flex', flexWrap: 'wrap', gap: '4rem', alignItems: 'center', justifyContent: 'space-between' }}>
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -527,7 +515,7 @@ export default function HomePage({ onNavigate }) {
 
       {/* 5. Testimonials FlowSection */}
       <FlowSection aria-label="Testimonials" style={{ backgroundColor: '#fcfaf5', paddingTop: '6rem', paddingBottom: '6rem', backgroundImage: 'linear-gradient(rgba(19, 34, 28, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(19, 34, 28, 0.05) 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
-        <div style={{ maxWidth: 1300, margin: 'auto', width: '100%', textAlign: 'left' }}>
+        <div className="px-4 md:px-0" style={{ maxWidth: 1300, margin: 'auto', width: '100%', textAlign: 'left' }}>
           <motion.div
             initial="hidden"
             whileInView="visible"

@@ -8,21 +8,22 @@ import BookingPage from './pages/BookingPage';
 import CommunityPage from './pages/CommunityPage';
 import ContactPage from './pages/ContactPage';
 import EventsPage from './pages/EventsPage';
+import CustomPackagePage from './pages/CustomPackagePage';
 import { AnimatePresence } from 'framer-motion';
 import AnimatedPage from './components/AnimatedPage';
 
 export default function App() {
   const [page, setPage] = useState(() => {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('p') || 'home';
+    const path = window.location.pathname.replace(/^\/|\/$/g, '');
+    return path || 'home';
   });
   const [bookingPlan, setBookingPlan] = useState('');
 
   // Handle browser back/forward buttons (and swipe gestures)
   useEffect(() => {
     const handlePopState = () => {
-      const params = new URLSearchParams(window.location.search);
-      setPage(params.get('p') || 'home');
+      const path = window.location.pathname.replace(/^\/|\/$/g, '');
+      setPage(path || 'home');
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
@@ -55,7 +56,7 @@ export default function App() {
     else if (target !== 'booking') setBookingPlan('');
     
     if (page !== target) {
-      const url = target === 'home' ? window.location.pathname : `?p=${target}`;
+      const url = target === 'home' ? '/' : `/${target}`;
       window.history.pushState({}, '', url);
       setPage(target);
     }
@@ -69,11 +70,12 @@ export default function App() {
       case 'community': return <AnimatedPage key="community"><CommunityPage onNavigate={navigateTo} /></AnimatedPage>;
       case 'events': return <AnimatedPage key="events"><EventsPage onNavigate={navigateTo} /></AnimatedPage>;
       case 'contact': return <AnimatedPage key="contact"><ContactPage onNavigate={navigateTo} /></AnimatedPage>;
+      case 'custom-package': return <AnimatedPage key="custom-package"><CustomPackagePage onNavigate={navigateTo} /></AnimatedPage>;
       default: return <AnimatedPage key="home"><HomePage onNavigate={navigateTo} /></AnimatedPage>;
     }
   }
 
-  const noFooter = ['booking'];
+  const noFooter = ['booking', 'custom-package'];
 
   return (
     <div style={{ minHeight: '100vh', background: 'transparent' }}>

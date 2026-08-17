@@ -137,33 +137,9 @@ export default function SpacesPage({ onNavigate }) {
             </span>
           </h1>
           <p style={{ fontSize: 18, color: '#000000ff', margin: '0 0 3rem', maxWidth: 600, fontWeight: 700 }}>All plans include premium Wi-Fi, unlimited tea & coffee, and access to all common areas.</p>
-
-          {/* Billing toggle */}
-          <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 16, borderRadius: 8, padding: '8px 24px', background: '#fff', border: '3px solid #13221C', boxShadow: '4px 4px 0px #13221C' }}>
-              <span style={{ fontSize: 15, fontWeight: 900, color: !annual ? textDark : textLight, cursor: 'pointer', transition: 'color 0.2s', textTransform: 'uppercase' }} onClick={() => setAnnual(false)}>Monthly</span>
-              <div onClick={() => setAnnual(a => !a)} style={{ width: 56, height: 32, background: annual ? '#174F50' : '#fcfaf5', borderRadius: 4, position: 'relative', cursor: 'pointer', border: '3px solid #13221C', transition: 'background 0.3s cubic-bezier(0.16, 1, 0.3, 1)' }}>
-                <motion.div
-                  layout
-                  transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                  style={{ position: 'absolute', top: 2, left: annual ? 26 : 2, width: 22, height: 22, borderRadius: 2, background: '#fde047', border: '2px solid #13221C' }}
-                />
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }} onClick={() => setAnnual(true)}>
-                <span style={{ fontSize: 15, fontWeight: 900, color: annual ? textDark : textLight, transition: 'color 0.2s', textTransform: 'uppercase' }}>Annual</span>
-                <motion.span
-                  animate={{ y: [0, -4, 0] }}
-                  transition={{ repeat: Infinity, duration: 4 }}
-                  style={{ fontSize: 12, color: '#fff', background: '#174F50', padding: '4px 12px', borderRadius: 4, fontWeight: 800, border: '2px solid #13221C', textTransform: 'uppercase' }}
-                >
-                  Save 20%
-                </motion.span>
-              </div>
-            </div>
-          </div>
         </motion.div>
 
-        <motion.div 
+        <motion.div
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.4 }}
@@ -290,6 +266,7 @@ export default function SpacesPage({ onNavigate }) {
               <div
                 style={{
                   display: 'flex',
+                  justifyContent: 'center',
                   gap: 24,
                   overflowX: 'auto',
                   paddingTop: '16px',
@@ -336,7 +313,7 @@ export default function SpacesPage({ onNavigate }) {
                       >
                         {plan.popular && (
                           <div style={{ position: 'absolute', top: -16, left: '50%', transform: 'translateX(-50%) rotate(-2deg)', background: '#174F50', color: '#fff', fontSize: 12, fontWeight: 900, padding: '8px 20px', borderRadius: 4, letterSpacing: '0.1em', border: '3px solid #13221C', boxShadow: '4px 4px 0px #13221C' }}>
-                            MOST POPULAR
+                            RECOMMENDED
                           </div>
                         )}
                         <div style={{ color: '#13221C', marginBottom: 12 }}>{getPlanIcon(plan.id)}</div>
@@ -368,18 +345,18 @@ export default function SpacesPage({ onNavigate }) {
                           {plan.desc}
                         </p>
                         <div style={{ marginBottom: 20 }}>
-                          <span style={{ 
-                            display: 'inline-block', 
-                            color: '#fff', 
-                            background: '#174F50', 
-                            border: '2px solid #13221C', 
-                            padding: '6px 12px', 
-                            borderRadius: 6, 
-                            fontWeight: 900, 
-                            textTransform: 'uppercase', 
-                            fontSize: 12, 
+                          <span style={{
+                            display: 'inline-block',
+                            color: '#fff',
+                            background: '#174F50',
+                            border: '2px solid #13221C',
+                            padding: '6px 12px',
+                            borderRadius: 6,
+                            fontWeight: 900,
+                            textTransform: 'uppercase',
+                            fontSize: 12,
                             letterSpacing: '0.02em',
-                            boxShadow: '3px 3px 0px #13221C' 
+                            boxShadow: '3px 3px 0px #13221C'
                           }}>
                             {plan.id === 'daily' ? 'Daily pass rate' : plan.id === '15day' ? '15-Day pass rate' : `${plan.name} rate`}: {plan.monthlyPrice ? `₹${plan.monthlyPrice.toLocaleString('en-IN')}/-` : 'Custom Quote'}
                           </span>
@@ -399,7 +376,7 @@ export default function SpacesPage({ onNavigate }) {
                           ))}
                         </div>
                         <button
-                          onClick={() => plan.id === 'team' ? onNavigate('contact') : onNavigate('booking', plan.name)}
+                          onClick={() => plan.id === 'custom' ? onNavigate('custom-package') : plan.id === 'team' ? onNavigate('contact') : onNavigate('booking', plan.name)}
                           onMouseEnter={e => {
                             e.currentTarget.style.transform = 'translate(-2px, -2px)';
                             e.currentTarget.style.boxShadow = '6px 6px 0px #13221C';

@@ -10,7 +10,12 @@ const bg = '#fcfaf5';
 
 const spaceTypes = ['Hot Desk', 'Dedicated Desk', 'Private Cabin', 'Meeting Room'];
 const locationNames = ['Manjeri', 'Kozhikode', 'Perinthalmanna'];
-const durations = ['Day pass', '1 week', '1 month', '3 months', '6 months', '1 year'];
+const DURATIONS_MAP = {
+  'Hot Desk': ['1 week', '15 days', '1 month', '3 months', '6 months', '1 year'],
+  'Dedicated Desk': ['1 week', '15 days', '1 month', '3 months', '6 months', '1 year'],
+  'Private Cabin': ['3 months', '6 months', '1 year'],
+  'Meeting Room': ['1 hr', '2 hr', '3 hr']
+};
 
 const PRICING = {
   'Hot Desk': { 'Day pass': 399, '1 week': 1999, '1 month': 5999, '3 months': 15999, '6 months': 27999, '1 year': 49999 },
@@ -89,15 +94,21 @@ function MiniCalendar({ selected, onSelect }) {
 function fmt(n) { return '₹' + n.toLocaleString('en-IN'); }
 
 export default function BookingPage({ onNavigate, preselectedPlan = '' }) {
+  let parsedCustom = null;
+  if (typeof preselectedPlan === 'string' && preselectedPlan.startsWith('{')) {
+    try { parsedCustom = JSON.parse(preselectedPlan); } catch(e){}
+  }
+
   const [isEnquiry, setIsEnquiry] = useState(false);
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(parsedCustom ? 2 : 1);
 
   // If arriving from Spaces page, auto-derive space type & duration from the plan name
-  const mapped = PLAN_MAP[preselectedPlan] || null;
-  const initSpace = mapped ? mapped.space : preselectedPlan;
-  const initDuration = mapped ? mapped.duration : '';
+  const mapped = parsedCustom ? null : (PLAN_MAP[preselectedPlan] || null);
+  const initSpace = parsedCustom ? parsedCustom.space : (mapped ? mapped.space : preselectedPlan);
+  const initDuration = parsedCustom ? parsedCustom.duration : (mapped ? mapped.duration : '');
+  const initLocation = parsedCustom ? parsedCustom.location : '';
 
-  const [form, setForm] = useState({ space: initSpace, location: '', duration: initDuration, date: null, name: '', email: '', phone: '', company: '' });
+  const [form, setForm] = useState({ space: initSpace, location: initLocation, duration: initDuration, date: null, name: '', email: '', phone: '', company: '', customFeatures: parsedCustom ? parsedCustom.features : [] });
   const [selectedAddons, setSelectedAddons] = useState([]);
   const [paymentMethod, setPaymentMethod] = useState('card');
   const [cardDetails, setCardDetails] = useState({ number: '', expiry: '', cvv: '', holder: '' });
@@ -143,7 +154,7 @@ export default function BookingPage({ onNavigate, preselectedPlan = '' }) {
       name: form.name, email: form.email, phone: form.phone, company: form.company || 'N/A',
       type: isEnquiry ? 'Enquiry' : 'Booking',
     };
-    if (!isEnquiry) { Object.assign(payload, { space: form.space, location: form.location, duration: form.duration, startDate: dateStr, addons: selectedAddons.join(', ') || 'None', amountPaid: fmt(grandTotal) }); }
+    if (!isEnquiry) { Object.assign(payload, { space: form.space, location: form.location, duration: form.duration, startDate: dateStr, addons: selectedAddons.join(', ') || 'None', amountPaid: fmt(grandTotal), customFeatures: form.customFeatures?.length ? form.customFeatures.join(', ') : 'None' }); }
     try {
       const r = await fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(payload) });
       const res = await r.json();
@@ -420,9 +431,8 @@ export default function BookingPage({ onNavigate, preselectedPlan = '' }) {
               <p style={{ fontSize: 18, fontWeight: 900, margin: '0 0 1rem', color: textDark, textTransform: 'uppercase' }}>What type of space?</p>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 16, marginBottom: '2.5rem' }}>
                 {spaceTypes.map(s => (
-                  <button key={s} onClick={() => update('space', s)} style={{ background: form.space === s ? '#174F50' : '#fff', border: '3px solid #13221C', borderRadius: 8, padding: '16px', fontSize: 14, fontWeight: 900, color: form.space === s ? '#fff' : textDark, cursor: 'pointer', transition: 'all 0.15s', textAlign: 'left', textTransform: 'uppercase', boxShadow: form.space === s ? '4px 4px 0px #13221C' : '4px 4px 0px rgba(19,34,28,0.1)' }}>
+                  <button key={s} onClick={() => { update('space', s); update('duration', ''); }} style={{ background: form.space === s ? '#174F50' : '#fff', border: '3px solid #13221C', borderRadius: 8, padding: '16px', fontSize: 14, fontWeight: 900, color: form.space === s ? '#fff' : textDark, cursor: 'pointer', transition: 'all 0.15s', textAlign: 'left', textTransform: 'uppercase', boxShadow: form.space === s ? '4px 4px 0px #13221C' : '4px 4px 0px rgba(19,34,28,0.1)' }}>
                     {s}
-                    {form.duration && PRICING[s] && <span style={{ display: 'block', fontSize: 12, marginTop: 4, opacity: 0.85, fontWeight: 700 }}>{fmt(PRICING[s][form.duration] || 0)}</span>}
                   </button>
                 ))}
               </div>
@@ -444,20 +454,13 @@ export default function BookingPage({ onNavigate, preselectedPlan = '' }) {
                     <p style={{ margin: '4px 0 0', fontSize: 17, fontWeight: 900, color: textLight }}>{preselectedPlan}</p>
                     <p style={{ margin: '2px 0 0', fontSize: 13, fontWeight: 700, color: textDark }}>{form.space} · {form.duration}</p>
                   </div>
-                  <span style={{ fontSize: 22, fontWeight: 900, color: textLight }}>{basePrice > 0 ? fmt(basePrice) : '—'}</span>
                 </div>
               ) : (
                 <>
                   <p style={{ fontSize: 18, fontWeight: 900, margin: '0 0 1rem', color: textDark, textTransform: 'uppercase' }}>How long?</p>
                   <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                    {durations.map(d => <button key={d} onClick={() => update('duration', d)} style={{ background: form.duration === d ? '#174F50' : '#fff', border: '3px solid #13221C', borderRadius: 100, padding: '10px 20px', fontSize: 14, color: form.duration === d ? '#fff' : textDark, cursor: 'pointer', fontWeight: 900, transition: 'all 0.15s', textTransform: 'uppercase', boxShadow: form.duration === d ? '4px 4px 0px #13221C' : '2px 2px 0px rgba(19,34,28,0.1)' }}>{d}</button>)}
+                    {(DURATIONS_MAP[form.space] || []).map(d => <button key={d} onClick={() => update('duration', d)} style={{ background: form.duration === d ? '#174F50' : '#fff', border: '3px solid #13221C', borderRadius: 100, padding: '10px 20px', fontSize: 14, color: form.duration === d ? '#fff' : textDark, cursor: 'pointer', fontWeight: 900, transition: 'all 0.15s', textTransform: 'uppercase', boxShadow: form.duration === d ? '4px 4px 0px #13221C' : '2px 2px 0px rgba(19,34,28,0.1)' }}>{d}</button>)}
                   </div>
-                  {form.space && form.duration && (
-                    <div style={{ marginTop: '1.5rem', padding: '1rem 1.25rem', background: '#f0fdf4', border: '3px solid #13221C', borderRadius: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontSize: 14, fontWeight: 800, color: textDark, textTransform: 'uppercase' }}>Base price</span>
-                      <span style={{ fontSize: 22, fontWeight: 900, color: textLight }}>{fmt(basePrice)}</span>
-                    </div>
-                  )}
                 </>
               )}
             </div>
@@ -494,36 +497,11 @@ export default function BookingPage({ onNavigate, preselectedPlan = '' }) {
                         <p style={{ margin: 0, fontSize: 15, fontWeight: 900, color: textDark, textTransform: 'uppercase' }}>{addon.label}</p>
                         <p style={{ margin: '2px 0 0', fontSize: 12, color: textLight, fontWeight: 700 }}>{addon.desc}</p>
                       </div>
-                      <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                        <p style={{ margin: 0, fontSize: 16, fontWeight: 900, color: active ? textLight : textDark }}>+{fmt(addon.price)}</p>
-                        <p style={{ margin: '2px 0 0', fontSize: 10, color: textDark, fontWeight: 700, textTransform: 'uppercase', opacity: 0.6 }}>per month</p>
-                      </div>
+
                       <div style={{ width: 24, height: 24, borderRadius: 6, border: `3px solid ${active ? '#174F50' : '#13221C'}`, background: active ? '#174F50' : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 14, fontWeight: 900, flexShrink: 0, transition: 'all 0.15s' }}>{active ? '✓' : ''}</div>
                     </div>
                   );
                 })}
-              </div>
-              <div style={{ marginTop: '1.5rem', background: '#fcfaf5', border: '3px solid #13221C', borderRadius: 10, overflow: 'hidden' }}>
-                <div style={{ padding: '1rem 1.25rem', display: 'flex', justifyContent: 'space-between', borderBottom: '2px dashed rgba(19,34,28,0.2)' }}>
-                  <span style={{ fontSize: 13, fontWeight: 800, textTransform: 'uppercase' }}>{form.space} — {form.duration}</span>
-                  <span style={{ fontSize: 14, fontWeight: 900 }}>{fmt(basePrice)}</span>
-                </div>
-                {selectedAddons.map(id => {
-                  const a = ADDONS.find(x => x.id === id); return (
-                    <div key={id} style={{ padding: '0.75rem 1.25rem', display: 'flex', justifyContent: 'space-between', borderBottom: '2px dashed rgba(19,34,28,0.1)' }}>
-                      <span style={{ fontSize: 13, fontWeight: 700, color: textLight }}>+ {a.label}</span>
-                      <span style={{ fontSize: 13, fontWeight: 800 }}>{fmt(a.price)}</span>
-                    </div>
-                  );
-                })}
-                <div style={{ padding: '0.75rem 1.25rem', display: 'flex', justifyContent: 'space-between', borderBottom: '2px dashed rgba(19,34,28,0.15)' }}>
-                  <span style={{ fontSize: 13, fontWeight: 800, textTransform: 'uppercase' }}>GST (18%)</span>
-                  <span style={{ fontSize: 13, fontWeight: 800 }}>{fmt(gst)}</span>
-                </div>
-                <div style={{ padding: '1rem 1.25rem', display: 'flex', justifyContent: 'space-between', background: yellow }}>
-                  <span style={{ fontSize: 16, fontWeight: 900, textTransform: 'uppercase' }}>Total</span>
-                  <span style={{ fontSize: 20, fontWeight: 900, color: textDark }}>{fmt(grandTotal)}</span>
-                </div>
               </div>
             </div>
 
