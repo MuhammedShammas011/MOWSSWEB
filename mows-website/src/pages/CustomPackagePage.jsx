@@ -61,7 +61,7 @@ export default function CustomPackagePage({ onNavigate }) {
 
   return (
     <div style={{ color: textDark, minHeight: '100vh', position: 'relative', background: bg, backgroundImage: 'linear-gradient(rgba(19,34,28,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(19,34,28,0.05) 1px,transparent 1px)', backgroundSize: '24px 24px', paddingBottom: '6rem' }}>
-      <div style={{ maxWidth: 800, margin: '0 auto', padding: '8rem 2rem 4rem' }}>
+      <div className="custom-package-container" style={{ maxWidth: 800, margin: '0 auto', padding: '8rem 2rem 4rem' }}>
 
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
@@ -70,7 +70,7 @@ export default function CustomPackagePage({ onNavigate }) {
           <p style={{ fontSize: 18, color: textDark, maxWidth: 600, margin: '0 auto', fontWeight: 700 }}>Select the features and services you need. We'll tailor an environment specifically for your team's unique requirements.</p>
         </div>
 
-        <div style={{ background: '#fff', border: '4px solid #13221C', borderRadius: 12, padding: '3rem', marginBottom: '2rem', boxShadow: '8px 8px 0px #13221C' }}>
+        <div className="custom-package-card" style={{ background: '#fff', border: '4px solid #13221C', borderRadius: 12, padding: '3rem', marginBottom: '2rem', boxShadow: '8px 8px 0px #13221C' }}>
 
           {/* Space Type */}
           <div style={{ marginBottom: '3rem' }}>
@@ -87,7 +87,7 @@ export default function CustomPackagePage({ onNavigate }) {
           {/* Services Checklist */}
           <div style={{ marginBottom: '3rem' }}>
             <p style={{ fontSize: 20, fontWeight: 900, margin: '0 0 1rem', color: textDark, textTransform: 'uppercase' }}>Select Your Features</p>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 16 }}>
+            <div className="custom-features-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 16 }}>
               {SERVICES.map(srv => {
                 const active = selectedServices.includes(srv);
                 return (

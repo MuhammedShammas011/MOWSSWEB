@@ -67,7 +67,7 @@ export default function LocationsPage({ onNavigate }) {
     <div style={{ color: textDark, minHeight: '100vh', position: 'relative', backgroundImage: 'linear-gradient(rgba(19, 34, 28, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(19, 34, 28, 0.05) 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
 
       {/* Header */}
-      <section style={{
+      <section className="locations-hero" style={{
         minHeight: '45vh',
         padding: '6rem 2rem 4rem',
         position: 'relative',
@@ -107,6 +107,7 @@ export default function LocationsPage({ onNavigate }) {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           style={{ padding: '3rem', flex: 1, minWidth: 320, textAlign: 'left', position: 'relative' }}
+          className="locations-hero-text"
         >
           <p style={{
             fontSize: 14,

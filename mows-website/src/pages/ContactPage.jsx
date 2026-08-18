@@ -35,12 +35,13 @@ export default function ContactPage({ onNavigate }) {
     <div style={{ color: textDark, minHeight: '100vh', position: 'relative', background: bg, backgroundImage: 'linear-gradient(rgba(19, 34, 28, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(19, 34, 28, 0.05) 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
 
       {/* Hero Section */}
-      <section style={{ minHeight: '60vh', padding: '8rem 4vw 4rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '4rem', flexWrap: 'wrap' }}>
+      <section className="contact-hero" style={{ minHeight: '60vh', padding: '8rem 4vw 4rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '4rem', flexWrap: 'wrap' }}>
         <motion.div
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           style={{ flex: 1, minWidth: 320, maxWidth: 650, textAlign: 'left' }}
+          className="contact-hero-text"
         >
           <p style={{
             fontSize: 14,
@@ -84,6 +85,7 @@ export default function ContactPage({ onNavigate }) {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.4 }}
           style={{ flex: 1, minWidth: 300, display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 5 }}
+          className="contact-hero-image"
         >
           <div style={{
             background: '#fff',

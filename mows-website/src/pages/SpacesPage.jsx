@@ -97,13 +97,14 @@ export default function SpacesPage({ onNavigate }) {
 
   return (
     <div style={{ position: 'relative', minHeight: '100vh', color: textDark, background: '#fcfaf5', backgroundImage: 'linear-gradient(rgba(19, 34, 28, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(19, 34, 28, 0.05) 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
-      <section style={{ minHeight: '60vh', padding: '8rem 4vw 4rem', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '4rem', flexWrap: 'wrap' }}>
+      <section className="spaces-hero" style={{ minHeight: '60vh', padding: '8rem 4vw 4rem', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '4rem', flexWrap: 'wrap' }}>
 
         <motion.div
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           style={{ flex: 1, minWidth: 320, maxWidth: 650, padding: '0', textAlign: 'left' }}
+          className="spaces-hero-text"
         >
           <p style={{
             fontSize: 14,
@@ -144,6 +145,7 @@ export default function SpacesPage({ onNavigate }) {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.4 }}
           style={{ flex: 1, minWidth: 300, display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 5 }}
+          className="spaces-hero-image"
         >
           <div style={{
             background: '#fff',
@@ -167,7 +169,7 @@ export default function SpacesPage({ onNavigate }) {
         </motion.div>
       </section>
 
-      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '4rem 2rem 6rem' }}>
+      <div className="spaces-content-wrap" style={{ maxWidth: 1400, margin: '0 auto', padding: '4rem 2rem 6rem' }}>
         <div style={{
           background: '#fff',
           border: '4px solid #13221C',
@@ -264,6 +266,7 @@ export default function SpacesPage({ onNavigate }) {
               </h2>
 
               <div
+                className="plans-container"
                 style={{
                   display: 'flex',
                   justifyContent: 'center',
@@ -298,6 +301,7 @@ export default function SpacesPage({ onNavigate }) {
                           e.currentTarget.style.transform = 'none';
                           e.currentTarget.style.boxShadow = '4px 4px 0px #13221C';
                         }}
+                       className="plan-card"
                         style={{
                           width: 320,
                           background: plan.popular ? '#fde047' : '#fcfaf5',

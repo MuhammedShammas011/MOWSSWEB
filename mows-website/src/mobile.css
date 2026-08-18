@@ -1,0 +1,305 @@
+/* ─────────────────────────────────────────────────────────────
+   mobile.css  —  MOBILE RESPONSIVE OVERRIDES (max-width: 768px)
+   These rules only apply on small screens.
+   Desktop / laptop layout is 100% untouched.
+──────────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+
+  /* ── Prevent horizontal overflow everywhere ──────── */
+  body, html {
+    overflow-x: hidden !important;
+  }
+
+  /* ── Safe heading wrapping ──────────────────────── */
+  h1, h2 {
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+  }
+
+  /* ────────────────────────────────────────────────────
+     NAVBAR
+  ──────────────────────────────────────────────────── */
+  .mobile-nav-root nav {
+    height: 70px !important;
+    padding: 0 16px !important;
+  }
+
+  /* ────────────────────────────────────────────────────
+     FOOTER
+  ──────────────────────────────────────────────────── */
+  .footer-inner {
+    padding: 3rem 1rem 2rem !important;
+  }
+
+  .footer-columns {
+    flex-direction: column !important;
+    gap: 2rem !important;
+  }
+
+  .footer-branding {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+
+  .footer-links {
+    gap: 2rem !important;
+    flex-wrap: wrap !important;
+  }
+
+  /* ────────────────────────────────────────────────────
+     HOMEPAGE  —  Hero
+  ──────────────────────────────────────────────────── */
+  .hero-section {
+    padding-top: 5.5rem !important;
+    padding-bottom: 2rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    flex-direction: column !important;
+    gap: 2rem !important;
+    min-height: auto !important;
+  }
+
+  /* ────────────────────────────────────────────────────
+     HOMEPAGE  —  Amenities, Locations, Testimonials
+  ──────────────────────────────────────────────────── */
+  .section-inner {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  .amenities-grid,
+  .testimonials-grid,
+  .locations-grid,
+  .events-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .franchise-layout {
+    flex-direction: column !important;
+    gap: 2rem !important;
+  }
+
+  .franchise-text,
+  .franchise-visual {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* ────────────────────────────────────────────────────
+     SPACES PAGE  —  Hero
+  ──────────────────────────────────────────────────── */
+  .spaces-hero {
+    flex-direction: column !important;
+    padding-top: 5.5rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    gap: 2rem !important;
+    min-height: auto !important;
+  }
+
+  .spaces-hero-text {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .spaces-hero-image {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Plan cards: wrap & full-width */
+  .plans-container {
+    flex-wrap: wrap !important;
+    overflow-x: visible !important;
+    justify-content: center !important;
+  }
+
+  .plan-card {
+    width: calc(100% - 8px) !important;
+    max-width: 400px !important;
+  }
+
+  .spaces-content-wrap {
+    padding: 2rem 1rem !important;
+  }
+
+  .spaces-package-inner {
+    padding: 1.5rem 1rem !important;
+  }
+
+  /* ────────────────────────────────────────────────────
+     LOCATIONS PAGE
+  ──────────────────────────────────────────────────── */
+  .locations-hero {
+    flex-direction: column !important;
+    padding-top: 5rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    gap: 1.5rem !important;
+  }
+
+  .locations-hero-text {
+    padding: 0 !important;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .locations-hero-image {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .locations-list-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .location-detail-row {
+    flex-direction: column !important;
+    gap: 1.5rem !important;
+  }
+
+  .locations-filters {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+  }
+
+  /* ────────────────────────────────────────────────────
+     BOOKING PAGE
+  ──────────────────────────────────────────────────── */
+  .booking-container {
+    padding: 5rem 1rem 3rem !important;
+  }
+
+  .booking-card {
+    padding: 1.25rem !important;
+  }
+
+  .booking-grid-2col {
+    grid-template-columns: 1fr !important;
+  }
+
+  .booking-nav-row {
+    flex-direction: column !important;
+  }
+
+  .step-indicator {
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+
+  /* ────────────────────────────────────────────────────
+     CUSTOM PACKAGE PAGE
+  ──────────────────────────────────────────────────── */
+  .custom-package-container {
+    padding: 5rem 1rem 3rem !important;
+  }
+
+  .custom-package-card {
+    padding: 1.25rem !important;
+  }
+
+  .custom-features-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ────────────────────────────────────────────────────
+     CONTACT PAGE
+  ──────────────────────────────────────────────────── */
+  .contact-hero {
+    flex-direction: column !important;
+    padding-top: 5.5rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    gap: 2rem !important;
+    min-height: auto !important;
+  }
+
+  .contact-hero-text,
+  .contact-hero-image {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .contact-info-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .contact-form-wrap {
+    padding: 2rem 1rem !important;
+  }
+
+  /* ────────────────────────────────────────────────────
+     EVENTS PAGE
+  ──────────────────────────────────────────────────── */
+  .events-hero {
+    flex-direction: column !important;
+    padding-top: 5.5rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    gap: 2rem !important;
+    min-height: auto !important;
+  }
+
+  .events-hero-text {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  /* ────────────────────────────────────────────────────
+     COMMUNITY PAGE
+  ──────────────────────────────────────────────────── */
+  .community-hero {
+    flex-direction: column !important;
+    padding-top: 5.5rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    gap: 2rem !important;
+    min-height: auto !important;
+  }
+
+  .community-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ────────────────────────────────────────────────────
+     GENERIC HELPERS
+  ──────────────────────────────────────────────────── */
+  .mobile-stack {
+    flex-direction: column !important;
+    gap: 1.5rem !important;
+  }
+
+  .mobile-full {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .mobile-pad {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  .cta-section-inner {
+    padding: 3rem 1rem !important;
+  }
+
+  .cta-buttons {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  /* ── Reduce large section vertical spacing ──────── */
+  .section-pt-large {
+    padding-top: 3rem !important;
+  }
+
+  .section-pb-large {
+    padding-bottom: 3rem !important;
+  }
+}

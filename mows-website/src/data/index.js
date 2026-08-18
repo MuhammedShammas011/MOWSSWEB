@@ -49,7 +49,7 @@ export const locations = [
 
 export const plans = [
   { id: 'daily', name: 'Daily Pass', icon: '🎫', monthlyPrice: 400, annualPrice: 3000, desc: 'Access to facilities for a single day including shared spaces.', features: ['High-speed internet', 'Shared spaces', 'Amenities'], missing: ['Dedicated desk', 'Storage locker'] },
-  { id: 'monthly_basic', name: 'Monthly Basic', icon: '🪑', monthlyPrice: 4800, annualPrice: 3000, desc: 'Flexible monthly access to group working spaces.', features: ['High-speed internet', '4 meeting room hours/mo', '1 tea/coffee per day'], missing: ['Dedicated desk', 'Storage locker'], popular: true },
+  { id: 'monthly_basic', name: 'Monthly Basic', icon: '🪑', monthlyPrice: 4800, annualPrice: 3000, desc: 'Flexible monthly access to group working spaces.', features: ['High-speed internet', '4 meeting room hours/mo', 'tea/coffee on demand'], missing: ['Dedicated desk', 'Storage locker'], popular: true },
   { id: 'custom', name: 'Custom Package', icon: '💼', monthlyPrice: null, annualPrice: null, desc: 'Tailored office solutions for large teams and custom requirements.', features: ['Custom layout & branding', 'Dedicated internet bandwidth', '24/7 access control', 'Dedicated support manager'], missing: [] }
 ];
 

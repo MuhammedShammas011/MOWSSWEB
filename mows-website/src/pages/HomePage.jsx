@@ -89,7 +89,7 @@ export default function HomePage({ onNavigate }) {
         }}
       >
         <div 
-          className="flex flex-col md:flex-row items-center md:justify-start w-full gap-12 md:gap-4 pt-32 pb-20 md:pt-0 md:pb-0"
+          className="flex flex-col md:flex-row items-center md:justify-start w-full gap-12 md:gap-4 pt-32 pb-20 md:pt-0 md:pb-0 hero-section"
           style={{ minHeight: '100vh', padding: '0 4vw' }}
         >
           {/* Text Content */}
@@ -289,6 +289,7 @@ export default function HomePage({ onNavigate }) {
             viewport={{ once: true, margin: "-100px" }}
             variants={containerVariants}
             style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))', gap: 24 }}
+            className="amenities-grid"
           >
             {amenities.map((a, i) => {
               const colors = ['#fde047', '#fca5a5', '#86efac', '#93c5fd', '#d8b4fe', '#fdba74'];
@@ -383,6 +384,7 @@ export default function HomePage({ onNavigate }) {
             viewport={{ once: true }}
             variants={containerVariants}
             style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}
+            className="locations-grid"
           >
             {locations.slice(0, 3).map((loc, i) => (
               <motion.div
@@ -424,12 +426,12 @@ export default function HomePage({ onNavigate }) {
       <FlowSection aria-label="Franchise Segment" style={{
         paddingTop: '6rem',
         paddingBottom: '6rem',
-        backgroundColor: '#f3e4c9ff',
+                        backgroundColor: '#f3e4c9ff',
         color: textDark,
         backgroundImage: 'linear-gradient(rgba(19, 34, 28, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(19, 34, 28, 0.05) 1px, transparent 1px)',
         backgroundSize: '24px 24px'
       }}>
-        <div className="px-4 md:px-0" style={{ maxWidth: 1300, margin: 'auto', width: '100%', display: 'flex', flexWrap: 'wrap', gap: '4rem', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div className="px-4 md:px-0 franchise-layout" style={{ maxWidth: 1300, margin: 'auto', width: '100%', display: 'flex', flexWrap: 'wrap', gap: '4rem', alignItems: 'center', justifyContent: 'space-between' }}>
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -550,6 +552,7 @@ export default function HomePage({ onNavigate }) {
             viewport={{ once: true, margin: "-100px" }}
             variants={containerVariants}
             style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 28, marginTop: '4rem' }}
+            className="testimonials-grid"
           >
             {testimonials.map((t, i) => {
               const colors = ['#fde047', '#fca5a5', '#86efac', '#93c5fd', '#d8b4fe', '#fdba74'];

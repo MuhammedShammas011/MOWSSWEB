@@ -40,8 +40,8 @@ export default function Footer({ onNavigate }) {
       borderTop: '6px solid #13221C'
     }}>
 
-      <div style={{ position: 'relative', zIndex: 1, maxWidth: 1400, margin: '0 auto', padding: '6rem 4rem 2rem' }}>
-        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '4rem', marginBottom: '6rem' }}>
+      <div className="footer-inner" style={{ position: 'relative', zIndex: 1, maxWidth: 1400, margin: '0 auto', padding: '6rem 4rem 2rem' }}>
+        <div className="footer-columns" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '4rem', marginBottom: '6rem' }}>
 
           {/* Left Column - Branding */}
           <div style={{ flex: '1 1 400px', maxWidth: 500 }}>

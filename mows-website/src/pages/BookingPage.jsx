@@ -381,7 +381,7 @@ export default function BookingPage({ onNavigate, preselectedPlan = '' }) {
 
   return (
     <div style={{ color: textDark, minHeight: '100vh', position: 'relative', background: bg, backgroundImage: 'linear-gradient(rgba(19,34,28,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(19,34,28,0.05) 1px,transparent 1px)', backgroundSize: '24px 24px' }}>
-      <div style={{ maxWidth: 720, margin: '0 auto', padding: '8rem 2rem 4rem' }}>
+      <div className="booking-container" style={{ maxWidth: 720, margin: '0 auto', padding: '8rem 2rem 4rem' }}>
 
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
@@ -408,7 +408,7 @@ export default function BookingPage({ onNavigate, preselectedPlan = '' }) {
         </div>
 
         {/* Step card */}
-        <div style={{ background: '#fff', border: '4px solid #13221C', borderRadius: 12, padding: '3rem', marginBottom: '2rem', boxShadow: '8px 8px 0px #13221C' }}>
+        <div className="booking-card" style={{ background: '#fff', border: '4px solid #13221C', borderRadius: 12, padding: '3rem', marginBottom: '2rem', boxShadow: '8px 8px 0px #13221C' }}>
 
           {/* ENQUIRY */}
           {isEnquiry ? (
@@ -446,23 +446,10 @@ export default function BookingPage({ onNavigate, preselectedPlan = '' }) {
                   </button>);
                 })}
               </div>
-              {preselectedPlan ? (
-                /* Plan already selected from Spaces page — show locked summary */
-                <div style={{ marginTop: '0.5rem', padding: '1rem 1.25rem', background: '#f0fdf4', border: '3px solid #13221C', borderRadius: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
-                  <div>
-                    <p style={{ margin: 0, fontSize: 13, fontWeight: 800, textTransform: 'uppercase', color: textDark, opacity: 0.6 }}>Selected plan</p>
-                    <p style={{ margin: '4px 0 0', fontSize: 17, fontWeight: 900, color: textLight }}>{preselectedPlan}</p>
-                    <p style={{ margin: '2px 0 0', fontSize: 13, fontWeight: 700, color: textDark }}>{form.space} · {form.duration}</p>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <p style={{ fontSize: 18, fontWeight: 900, margin: '0 0 1rem', color: textDark, textTransform: 'uppercase' }}>How long?</p>
-                  <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                    {(DURATIONS_MAP[form.space] || []).map(d => <button key={d} onClick={() => update('duration', d)} style={{ background: form.duration === d ? '#174F50' : '#fff', border: '3px solid #13221C', borderRadius: 100, padding: '10px 20px', fontSize: 14, color: form.duration === d ? '#fff' : textDark, cursor: 'pointer', fontWeight: 900, transition: 'all 0.15s', textTransform: 'uppercase', boxShadow: form.duration === d ? '4px 4px 0px #13221C' : '2px 2px 0px rgba(19,34,28,0.1)' }}>{d}</button>)}
-                  </div>
-                </>
-              )}
+              <p style={{ fontSize: 18, fontWeight: 900, margin: '0 0 1rem', color: textDark, textTransform: 'uppercase' }}>How long?</p>
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                {(DURATIONS_MAP[form.space] || []).map(d => <button key={d} onClick={() => update('duration', d)} style={{ background: form.duration === d ? '#174F50' : '#fff', border: '3px solid #13221C', borderRadius: 100, padding: '10px 20px', fontSize: 14, color: form.duration === d ? '#fff' : textDark, cursor: 'pointer', fontWeight: 900, transition: 'all 0.15s', textTransform: 'uppercase', boxShadow: form.duration === d ? '4px 4px 0px #13221C' : '2px 2px 0px rgba(19,34,28,0.1)' }}>{d}</button>)}
+              </div>
             </div>
 
           ) : step === 2 ? (
