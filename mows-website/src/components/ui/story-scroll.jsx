@@ -13,10 +13,12 @@ export const FlowSection = ({
   className,
   style = {},
   children,
+  id,
   'aria-label': ariaLabel,
 }) => (
   <section
     data-flow-section
+    id={id}
     aria-label={ariaLabel}
     className={cx('relative min-h-screen w-full', className)}
   >

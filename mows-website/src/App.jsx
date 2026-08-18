@@ -9,29 +9,49 @@ import CommunityPage from './pages/CommunityPage';
 import ContactPage from './pages/ContactPage';
 import EventsPage from './pages/EventsPage';
 import CustomPackagePage from './pages/CustomPackagePage';
+import AmenityDetailPage from './pages/AmenityDetailPage';
 import { AnimatePresence } from 'framer-motion';
 import AnimatedPage from './components/AnimatedPage';
 
 export default function App() {
   const [page, setPage] = useState(() => {
     const path = window.location.pathname.replace(/^\/|\/$/g, '');
+    if (path.startsWith('amenity-')) return 'amenity';
     return path || 'home';
   });
   const [bookingPlan, setBookingPlan] = useState('');
+  const [amenitySlug, setAmenitySlug] = useState(() => {
+    const path = window.location.pathname.replace(/^\/|\/$/g, '');
+    return path.startsWith('amenity-') ? path.replace('amenity-', '') : '';
+  });
 
   // Handle browser back/forward buttons (and swipe gestures)
   useEffect(() => {
     const handlePopState = () => {
       const path = window.location.pathname.replace(/^\/|\/$/g, '');
-      setPage(path || 'home');
+      if (path.startsWith('amenity-')) {
+        setAmenitySlug(path.replace('amenity-', ''));
+        setPage('amenity');
+      } else {
+        setPage(path || 'home');
+      }
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  // Scroll to top on every page change
+  // Scroll to top on every page change, unless there is a hash in the URL
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const hash = window.location.hash.substring(1);
+    if (hash) {
+      // Small timeout to allow the page to render first
+      setTimeout(() => {
+        const el = document.getElementById(hash);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }, [page]);
 
   // Handle Backspace to return to home page
@@ -52,13 +72,29 @@ export default function App() {
   }, [page]);
 
   function navigateTo(target, plan = '') {
-    if (target === 'booking' && plan) setBookingPlan(plan);
-    else if (target !== 'booking') setBookingPlan('');
-    
-    if (page !== target) {
-      const url = target === 'home' ? '/' : `/${target}`;
-      window.history.pushState({}, '', url);
-      setPage(target);
+    const [baseTarget, hash] = target.split('#');
+
+    if (baseTarget === 'booking' && plan) setBookingPlan(plan);
+    else if (baseTarget !== 'booking') setBookingPlan('');
+
+    // Handle amenity sub-routes e.g. 'amenity/wifi' -> URL: /amenity-wifi
+    if (baseTarget.startsWith('amenity/')) {
+      const slug = baseTarget.replace('amenity/', '');
+      setAmenitySlug(slug);
+      window.history.pushState({}, '', `/amenity-${slug}${hash ? '#' + hash : ''}`);
+      setPage('amenity');
+      return;
+    }
+
+    if (page !== baseTarget) {
+      const url = baseTarget === 'home' ? '/' : `/${baseTarget}`;
+      window.history.pushState({}, '', `${url}${hash ? '#' + hash : ''}`);
+      setPage(baseTarget);
+    } else if (hash) {
+      // If we are already on the page and just navigating to a hash
+      window.history.pushState({}, '', `${window.location.pathname}#${hash}`);
+      const el = document.getElementById(hash);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 
@@ -71,6 +107,7 @@ export default function App() {
       case 'events': return <AnimatedPage key="events"><EventsPage onNavigate={navigateTo} /></AnimatedPage>;
       case 'contact': return <AnimatedPage key="contact"><ContactPage onNavigate={navigateTo} /></AnimatedPage>;
       case 'custom-package': return <AnimatedPage key="custom-package"><CustomPackagePage onNavigate={navigateTo} /></AnimatedPage>;
+      case 'amenity': return <AnimatedPage key={`amenity-${amenitySlug}`}><AmenityDetailPage amenitySlug={amenitySlug} onNavigate={navigateTo} /></AnimatedPage>;
       default: return <AnimatedPage key="home"><HomePage onNavigate={navigateTo} /></AnimatedPage>;
     }
   }

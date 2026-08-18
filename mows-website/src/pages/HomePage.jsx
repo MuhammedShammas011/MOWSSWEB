@@ -251,7 +251,7 @@ export default function HomePage({ onNavigate }) {
       <div style={{ width: '100%', height: 6, backgroundColor: '#13221C', position: 'relative', zIndex: 10 }}></div>
 
       {/* 2. Amenities FlowSection */}
-      <FlowSection aria-label="Amenities" style={{ backgroundColor: '#fcfaf5', paddingBottom: '10rem', paddingTop: '6rem', backgroundImage: 'linear-gradient(rgba(19, 34, 28, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(19, 34, 28, 0.05) 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
+      <FlowSection id="amenities-section" aria-label="Amenities" style={{ backgroundColor: '#fcfaf5', paddingBottom: '10rem', paddingTop: '6rem', backgroundImage: 'linear-gradient(rgba(19, 34, 28, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(19, 34, 28, 0.05) 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
         <div className="px-4 md:px-0" style={{ maxWidth: 1300, margin: 'auto', width: '100%' }}>
           <motion.div
             initial="hidden"
@@ -299,6 +299,7 @@ export default function HomePage({ onNavigate }) {
                   key={a.label}
                   variants={itemVariants}
                   whileHover={{ x: 3, y: 3, boxShadow: '2px 2px 0px #13221C' }}
+                  onClick={() => onNavigate(`amenity/${a.icon}`)}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -312,7 +313,7 @@ export default function HomePage({ onNavigate }) {
                   }}
                 >
                   <div style={{ height: 8, background: cardColor, borderBottom: '2px solid #13221C' }} />
-                  <div style={{ padding: '24px 28px', display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ padding: '24px 28px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                     <div style={{ width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16, color: '#13221C' }}>
                       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg>
                     </div>
