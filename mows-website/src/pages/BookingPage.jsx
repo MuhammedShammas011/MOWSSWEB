@@ -149,12 +149,12 @@ export default function BookingPage({ onNavigate, preselectedPlan = '' }) {
     setIsSubmitting(true);
     const dateStr = form.date ? form.date.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : 'N/A';
     const payload = {
-      access_key: '60bc935a-6c8a-4da4-949f-e618b1318895',
+      access_key: 'c6530d45-5dc2-4001-bc5c-5022e62a6bc1',
       subject: isEnquiry ? `New Enquiry from ${form.name}` : `New Booking: ${form.space} at Mows ${form.location}`,
       name: form.name, email: form.email, phone: form.phone, company: form.company || 'N/A',
       type: isEnquiry ? 'Enquiry' : 'Booking',
     };
-    if (!isEnquiry) { Object.assign(payload, { space: form.space, location: form.location, duration: form.duration, startDate: dateStr, addons: selectedAddons.join(', ') || 'None', amountPaid: fmt(grandTotal), customFeatures: form.customFeatures?.length ? form.customFeatures.join(', ') : 'None' }); }
+    if (!isEnquiry) { Object.assign(payload, { space: form.space, location: form.location, duration: form.duration, startDate: dateStr, addons: selectedAddons.length ? selectedAddons.map(id => ADDONS.find(a => a.id === id)?.label).join(', ') : 'None', customFeatures: form.customFeatures?.length ? form.customFeatures.join(', ') : 'None' }); }
     try {
       const r = await fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(payload) });
       const res = await r.json();
@@ -302,10 +302,10 @@ export default function BookingPage({ onNavigate, preselectedPlan = '' }) {
         </p>
         {!isEnquiry && (
           <div style={{ borderRadius: 8, padding: '1.5rem', textAlign: 'left', marginBottom: 20, background: '#fcfaf5', border: '3px solid #13221C' }}>
-            {[['Space', form.space], ['Location', 'Mows ' + form.location], ['Duration', form.duration], ['Start date', form.date?.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })], selectedAddons.length > 0 && ['Add-ons', selectedAddons.map(id => ADDONS.find(a => a.id === id)?.label).join(', ')], ['Amount paid', fmt(grandTotal)]].filter(Boolean).map(([k, v]) => (
-              <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: k !== 'Amount paid' ? '2px dashed rgba(19,34,28,0.2)' : 'none' }}>
+            {[['Space', form.space], ['Location', 'Mows ' + form.location], ['Duration', form.duration], ['Start date', form.date?.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })], selectedAddons.length > 0 && ['Add-ons', selectedAddons.map(id => ADDONS.find(a => a.id === id)?.label).join(', ')]].filter(Boolean).map(([k, v], idx, arr) => (
+              <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: idx !== arr.length - 1 ? '2px dashed rgba(19,34,28,0.2)' : 'none' }}>
                 <span style={{ fontSize: 13, color: textDark, fontWeight: 800, textTransform: 'uppercase' }}>{k}</span>
-                <span style={{ fontSize: 13, fontWeight: 900, color: k === 'Amount paid' ? textLight : textDark }}>{v}</span>
+                <span style={{ fontSize: 13, fontWeight: 900, color: textDark }}>{v}</span>
               </div>
             ))}
           </div>

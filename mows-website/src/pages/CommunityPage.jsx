@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X } from 'lucide-react';
 import LocationIcon from '../assets/LocationBlack.png';
 
 const textDark = '#13221C';
@@ -42,6 +43,7 @@ const HoverText = ({ text, defaultColor, hoverColor }) => (
 export default function CommunityPage({ onNavigate }) {
   const [rsvpd, setRsvpd] = useState(new Set());
   const [spotCounts, setSpotCounts] = useState(() => Object.fromEntries(events.map(e => [e.id, e.spots])));
+  const [showToast, setShowToast] = useState(false);
 
   function toggleRsvp(id) {
     setRsvpd(prev => {
@@ -295,7 +297,7 @@ export default function CommunityPage({ onNavigate }) {
                     </div>
 
                     <button
-                      onClick={() => alert("Registration not opened")}
+                      onClick={() => setShowToast(true)}
                       style={{
                         background: yellow,
                         color: textDark,
@@ -368,6 +370,44 @@ export default function CommunityPage({ onNavigate }) {
           >Get a membership →</button>
         </div>
       </div>
+
+      {/* Custom Toast Notification */}
+      <AnimatePresence>
+        {showToast && (
+          <motion.div
+            initial={{ opacity: 0, y: -50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -50, scale: 0.9 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+            style={{
+              position: 'fixed',
+              top: 100,
+              left: 0,
+              right: 0,
+              margin: '0 auto',
+              width: 'max-content',
+              background: '#ef4444',
+              color: '#fff',
+              padding: '16px 48px', // Extra horizontal padding for the absolute close button
+              borderRadius: 12,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              minWidth: 320,
+              zIndex: 9999,
+              border: '3px solid #13221C',
+              boxShadow: '6px 6px 0px #13221C'
+            }}
+          >
+            <div style={{ textAlign: 'center' }}>
+              <p style={{ margin: 0, fontSize: 16, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Registration not opened</p>
+            </div>
+            <button onClick={() => setShowToast(false)} style={{ position: 'absolute', right: 16, background: 'transparent', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex' }}>
+              <X size={20} strokeWidth={3} />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

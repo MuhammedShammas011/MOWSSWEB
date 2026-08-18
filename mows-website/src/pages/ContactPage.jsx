@@ -25,10 +25,27 @@ const HoverText = ({ text, defaultColor, hoverColor }) => (
 export default function ContactPage({ onNavigate }) {
   const [form, setForm] = useState({ name: '', email: '', company: '', mobile: '', preferredLocation: '', isFranchise: false, message: '' });
   const [sent, setSent] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function submit(e) {
+  async function submit(e) {
     e.preventDefault();
-    setSent(true);
+    setIsSubmitting(true);
+    const payload = {
+      access_key: 'c6530d45-5dc2-4001-bc5c-5022e62a6bc1',
+      subject: `New Contact Form Submission from ${form.name}`,
+      name: form.name, email: form.email, mobile: form.mobile, company: form.company || 'N/A',
+      preferredLocation: form.preferredLocation || 'N/A', isFranchise: form.isFranchise ? 'Yes' : 'No',
+      message: form.message || 'N/A'
+    };
+    try {
+      const r = await fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(payload) });
+      const res = await r.json();
+      if (res.success) {
+        setSent(true);
+        setForm({ name: '', email: '', company: '', mobile: '', preferredLocation: '', isFranchise: false, message: '' });
+      } else alert('Something went wrong!');
+    } catch (e) { console.error(e); alert('Failed to send. Check connection.'); }
+    finally { setIsSubmitting(false); }
   }
 
   return (
@@ -238,6 +255,7 @@ export default function ContactPage({ onNavigate }) {
               </div>
               <button
                 type="submit"
+                disabled={isSubmitting}
                 style={{
                   background: yellow,
                   color: textDark,
@@ -246,16 +264,17 @@ export default function ContactPage({ onNavigate }) {
                   padding: '16px',
                   fontSize: 16,
                   fontWeight: 900,
-                  cursor: 'pointer',
+                  cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                  opacity: isSubmitting ? 0.7 : 1,
                   transition: 'transform 0.1s, box-shadow 0.1s',
                   marginTop: 10,
                   boxShadow: '6px 6px 0px #13221C',
                   textTransform: 'uppercase'
                 }}
-                onMouseEnter={e => e.currentTarget.style.transform = 'translate(-2px, -2px)'}
-                onMouseLeave={e => e.currentTarget.style.transform = 'none'}
+                onMouseEnter={e => { if (!isSubmitting) e.currentTarget.style.transform = 'translate(-2px, -2px)' }}
+                onMouseLeave={e => { if (!isSubmitting) e.currentTarget.style.transform = 'none' }}
               >
-                Send message →
+                {isSubmitting ? 'Sending...' : 'Send message →'}
               </button>
             </form>
           )}
