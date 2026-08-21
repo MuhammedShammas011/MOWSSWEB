@@ -98,7 +98,7 @@ export default function HomePage({ onNavigate }) {
           minHeight: '100vh',
         }}
       >
-        <div 
+        <div
           className="flex flex-col md:flex-row items-center md:justify-start w-full gap-12 md:gap-4 pt-32 pb-20 md:pt-0 md:pb-0 hero-section"
           style={{ minHeight: '100vh', padding: '0 4vw' }}
         >
@@ -432,12 +432,13 @@ export default function HomePage({ onNavigate }) {
 
       {/* Section Divider */}
       <div style={{ width: '100%', height: 6, backgroundColor: '#13221C', position: 'relative', zIndex: 10 }}></div>
+      <div style={{ width: '100%', height: 4, backgroundColor: '#fde047', position: 'relative', zIndex: 10 }}></div>
 
       {/* 4. Franchise FlowSection */}
       <FlowSection aria-label="Franchise Segment" style={{
         paddingTop: '6rem',
         paddingBottom: '6rem',
-                        backgroundColor: '#f3e4c9ff',
+        backgroundColor: '#faf4e7ff',
         color: textDark,
         backgroundImage: 'linear-gradient(rgba(19, 34, 28, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(19, 34, 28, 0.05) 1px, transparent 1px)',
         backgroundSize: '24px 24px'

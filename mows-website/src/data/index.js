@@ -55,11 +55,11 @@ export const plans = [
 
 export const testimonials = [
   { name: 'Irfan', role: 'Freelancer', location: 'Manjeri', text: 'Perfect environment for a freelancer like myself to grow and network with like-minded professionals.', rating: 5 },
-  { name: 'Habeeb', role: 'Startup Founder', location: 'Manjeri', text: 'Excellent work space. The management team and staff are extremely helpful and supportive. The environment and the facilities are awesome. My staff are happy and more productive.', rating: 5 },
-  { name: 'Fathima', role: 'UI/UX Designer', location: 'Manjeri', text: 'The vibe here is incredible. I used to struggle with productivity at home, but since joining Mows I get more done in 4 hours than I used to in a whole day. The podcast studio is a bonus!', rating: 5 },
-  { name: 'Shafeeq', role: 'Software Engineer', location: 'Manjeri', text: 'High-speed internet, great coffee, and a buzzing community of tech folks. It does not get better than this for a developer looking to stay focused and connected.', rating: 5 },
+  { name: 'Ashwanth', role: 'Startup Founder', location: 'Manjeri', text: 'Excellent work space. The management team and staff are extremely helpful and supportive. The environment and the facilities are awesome. My staff are happy and more productive.', rating: 5 },
+  { name: 'Sadiya', role: 'UI/UX Designer', location: 'Manjeri', text: 'The vibe here is incredible. I used to struggle with productivity at home, but since joining Mows I get more done in 4 hours than I used to in a whole day. The podcast studio is a bonus!', rating: 5 },
+  { name: 'Ramees', role: 'Software Engineer', location: 'Manjeri', text: 'High-speed internet, great coffee, and a buzzing community of tech folks. It does not get better than this for a developer looking to stay focused and connected.', rating: 5 },
   { name: 'Aneesh', role: 'Content Creator', location: 'Manjeri', text: 'The photo and podcast studios alone are worth the membership. Everything is professionally set up and the staff are always around to help. Highly recommended for any creator.', rating: 5 },
-  { name: 'Riya', role: 'Marketing Consultant', location: 'Manjeri', text: 'I have been a member for over a year and I keep renewing because there is simply no better workspace in Manjeri. The community events are a brilliant way to network too.', rating: 5 },
+  { name: 'Steffy', role: 'Marketing Consultant', location: 'Manjeri', text: 'I have been a member for over a year and I keep renewing because there is simply no better workspace in Manjeri. The community events are a brilliant way to network too.', rating: 5 },
 ];
 
 export const amenities = [
