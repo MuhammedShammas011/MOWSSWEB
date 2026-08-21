@@ -33,20 +33,30 @@ const itemVariants = {
   visible: { opacity: 1, transition: { duration: 0.6 } }
 };
 
-const HoverText = ({ text }) => (
-  <>
-    {text.split('').map((char, i) => (
-      <motion.span
-        key={i}
-        whileHover={{ scale: 1.25, y: -4, color: '#174F50', rotate: (i % 2 === 0 ? 5 : -5) }}
-        transition={{ type: 'spring', stiffness: 500, damping: 15 }}
-        style={{ display: 'inline-block', transformOrigin: 'bottom center' }}
-      >
-        {char === ' ' ? '\u00A0' : char}
-      </motion.span>
-    ))}
-  </>
-);
+const HoverText = ({ text }) => {
+  const words = text.split(' ');
+  return (
+    <>
+      {words.map((word, wordIndex) => (
+        <span key={wordIndex} style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
+          {word.split('').map((char, charIndex) => (
+            <motion.span
+              key={`${wordIndex}-${charIndex}`}
+              whileHover={{ scale: 1.25, y: -4, color: '#174F50', rotate: (charIndex % 2 === 0 ? 5 : -5) }}
+              transition={{ type: 'spring', stiffness: 500, damping: 15 }}
+              style={{ display: 'inline-block', transformOrigin: 'bottom center' }}
+            >
+              {char}
+            </motion.span>
+          ))}
+          {wordIndex < words.length - 1 && (
+            <span style={{ display: 'inline-block' }}>&nbsp;</span>
+          )}
+        </span>
+      ))}
+    </>
+  );
+};
 
 // 3 distinct image pools so they never overlap
 const col0Images = [heroImg1, heroImg2, eventImg1];

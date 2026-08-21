@@ -5,20 +5,30 @@ import ArielViewImg from '../assets/DubaiArielView.jpg';
 import mowsInteriorVideo from '../assets/MowsInterior.mp4';
 import { motion } from 'framer-motion';
 
-const HoverText = ({ text, defaultColor, hoverColor }) => (
-  <>
-    {text.split('').map((char, i) => (
-      <motion.span
-        key={i}
-        whileHover={{ scale: 1.25, y: -4, color: hoverColor || defaultColor, rotate: (i % 2 === 0 ? 5 : -5) }}
-        transition={{ type: 'spring', stiffness: 500, damping: 15 }}
-        style={{ display: 'inline-block', transformOrigin: 'bottom center', color: defaultColor }}
-      >
-        {char === ' ' ? '\u00A0' : char}
-      </motion.span>
-    ))}
-  </>
-);
+const HoverText = ({ text, defaultColor, hoverColor }) => {
+  const words = text.split(' ');
+  return (
+    <>
+      {words.map((word, wordIndex) => (
+        <span key={wordIndex} style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
+          {word.split('').map((char, charIndex) => (
+            <motion.span
+              key={`${wordIndex}-${charIndex}`}
+              whileHover={{ scale: 1.25, y: -4, color: hoverColor || defaultColor, rotate: (charIndex % 2 === 0 ? 5 : -5) }}
+              transition={{ type: 'spring', stiffness: 500, damping: 15 }}
+              style={{ display: 'inline-block', transformOrigin: 'bottom center', color: defaultColor }}
+            >
+              {char}
+            </motion.span>
+          ))}
+          {wordIndex < words.length - 1 && (
+            <span style={{ display: 'inline-block' }}>&nbsp;</span>
+          )}
+        </span>
+      ))}
+    </>
+  );
+};
 
 const textDark = 'var(--color-forest-teal)';
 const textLight = 'rgba(23, 79, 80, 0.7)';

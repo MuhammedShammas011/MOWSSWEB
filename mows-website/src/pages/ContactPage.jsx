@@ -7,20 +7,30 @@ const textLight = '#174F50';
 const yellow = '#fde047';
 const bg = '#fcfaf5';
 
-const HoverText = ({ text, defaultColor, hoverColor }) => (
-  <>
-    {text.split('').map((char, i) => (
-      <motion.span
-        key={i}
-        whileHover={{ scale: 1.25, y: -4, color: hoverColor || defaultColor, rotate: (i % 2 === 0 ? 5 : -5) }}
-        transition={{ type: 'spring', stiffness: 500, damping: 15 }}
-        style={{ display: 'inline-block', transformOrigin: 'bottom center', color: defaultColor }}
-      >
-        {char === ' ' ? '\u00A0' : char}
-      </motion.span>
-    ))}
-  </>
-);
+const HoverText = ({ text, defaultColor, hoverColor }) => {
+  const words = text.split(' ');
+  return (
+    <>
+      {words.map((word, wordIndex) => (
+        <span key={wordIndex} style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
+          {word.split('').map((char, charIndex) => (
+            <motion.span
+              key={`${wordIndex}-${charIndex}`}
+              whileHover={{ scale: 1.25, y: -4, color: hoverColor || defaultColor, rotate: (charIndex % 2 === 0 ? 5 : -5) }}
+              transition={{ type: 'spring', stiffness: 500, damping: 15 }}
+              style={{ display: 'inline-block', transformOrigin: 'bottom center', color: defaultColor }}
+            >
+              {char}
+            </motion.span>
+          ))}
+          {wordIndex < words.length - 1 && (
+            <span style={{ display: 'inline-block' }}>&nbsp;</span>
+          )}
+        </span>
+      ))}
+    </>
+  );
+};
 
 export default function ContactPage({ onNavigate }) {
   const [form, setForm] = useState({ name: '', email: '', company: '', mobile: '', preferredLocation: '', isFranchise: false, message: '' });
