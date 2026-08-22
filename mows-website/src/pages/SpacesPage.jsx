@@ -300,6 +300,7 @@ export default function SpacesPage({ onNavigate }) {
                       initial={{ opacity: 0, y: 50 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.1, type: "spring", stiffness: 100 }}
+                      className="plan-card-wrapper"
                       style={{ display: "flex", flexShrink: 0, scrollSnapAlign: 'start' }}
                     >
                       <div

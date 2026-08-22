@@ -302,4 +302,62 @@
   .section-pb-large {
     padding-bottom: 3rem !important;
   }
+
+  /* ── Spaces Page: Available Packages ──────────────── */
+  .plans-container {
+    flex-direction: column !important;
+    overflow-x: visible !important;
+    scroll-snap-type: none !important;
+    align-items: stretch !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .plan-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .plan-card-wrapper {
+    width: 100% !important;
+    flex-shrink: unset !important;
+  }
+
+  /* ── Events Page: Event Ticket Cards ──────────────── */
+  .events-grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+
+  .ticket-card {
+    flex-direction: column !important;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .ticket-stub {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    min-width: unset !important;
+    width: 100% !important;
+    border-right: none !important;
+    border-bottom: 3px dashed #13221C !important;
+    padding-bottom: 1rem !important;
+    padding-right: 0 !important;
+    justify-content: flex-start !important;
+  }
+
+  .ticket-content {
+    padding: 1.25rem !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .ticket-notch-top,
+  .ticket-notch-bottom {
+    display: none !important;
+  }
 }

@@ -254,7 +254,7 @@ export default function EventsPage({ onNavigate }) {
             <p style={{ fontSize: 18, margin: 0 }}>No events found for this category.</p>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(440px, 1fr))', gap: 36 }}>
+          <div className="events-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(440px, 1fr))', gap: 36 }}>
             {filteredEvents.map((event) => {
               const [month, dateNum] = event.date.replace(',', '').split(' ');
               return (
