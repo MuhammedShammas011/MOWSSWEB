@@ -78,6 +78,7 @@ export const navLinks = [
   { label: 'Spaces', path: '/spaces' },
   { label: 'Events', path: '/events' },
   { label: 'Community', path: '/community' },
+  { label: 'About', path: '/about' },
   { label: 'Contact', path: '/contact' },
 ];
 

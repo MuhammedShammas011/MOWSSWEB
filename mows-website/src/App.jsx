@@ -10,6 +10,7 @@ import ContactPage from './pages/ContactPage';
 import EventsPage from './pages/EventsPage';
 import CustomPackagePage from './pages/CustomPackagePage';
 import AmenityDetailPage from './pages/AmenityDetailPage';
+import AboutPage from './pages/AboutPage';
 import { AnimatePresence } from 'framer-motion';
 import AnimatedPage from './components/AnimatedPage';
 
@@ -106,6 +107,7 @@ export default function App() {
       case 'community': return <AnimatedPage key="community"><CommunityPage onNavigate={navigateTo} /></AnimatedPage>;
       case 'events': return <AnimatedPage key="events"><EventsPage onNavigate={navigateTo} /></AnimatedPage>;
       case 'contact': return <AnimatedPage key="contact"><ContactPage onNavigate={navigateTo} /></AnimatedPage>;
+      case 'about': return <AnimatedPage key="about"><AboutPage onNavigate={navigateTo} /></AnimatedPage>;
       case 'custom-package': return <AnimatedPage key="custom-package"><CustomPackagePage onNavigate={navigateTo} /></AnimatedPage>;
       case 'amenity': return <AnimatedPage key={`amenity-${amenitySlug}`}><AmenityDetailPage amenitySlug={amenitySlug} onNavigate={navigateTo} /></AnimatedPage>;
       default: return <AnimatedPage key="home"><HomePage onNavigate={navigateTo} /></AnimatedPage>;

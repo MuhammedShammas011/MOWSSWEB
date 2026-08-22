@@ -11,7 +11,7 @@ const links = {
 
 const linkMap = {
   'Hot Desk': 'spaces', 'Dedicated Desk': 'spaces', 'Private Cabin': 'spaces', 'Meeting Rooms': 'spaces',
-  'Community': 'community', 'Contact': 'contact'
+  'About us': 'about', 'Community': 'community', 'Contact': 'contact'
 };
 
 const socials = [

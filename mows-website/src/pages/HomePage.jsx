@@ -525,6 +525,7 @@ export default function HomePage({ onNavigate }) {
       </FlowSection>
 
       {/* Section Divider */}
+      <div style={{ width: '100%', height: 4, backgroundColor: '#fde047', position: 'relative', zIndex: 10 }}></div>
       <div style={{ width: '100%', height: 6, backgroundColor: '#13221C', position: 'relative', zIndex: 10 }}></div>
 
       {/* 5. Testimonials FlowSection */}
