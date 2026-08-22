@@ -128,7 +128,7 @@ export default function AboutPage({ onNavigate }) {
         position: 'relative',
         overflow: 'hidden'
       }}>
-        <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 2 }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', textAlign: 'left', position: 'relative', zIndex: 2 }}>
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
