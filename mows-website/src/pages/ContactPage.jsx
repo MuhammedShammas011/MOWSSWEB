@@ -41,14 +41,13 @@ export default function ContactPage({ onNavigate }) {
     e.preventDefault();
     setIsSubmitting(true);
     const payload = {
-      access_key: 'c6530d45-5dc2-4001-bc5c-5022e62a6bc1',
-      subject: `New Contact Form Submission from ${form.name}`,
-      name: form.name, email: form.email, mobile: form.mobile, company: form.company || 'N/A',
+      name: form.name, email: form.email, phone: form.mobile, company: form.company || 'N/A',
       preferredLocation: form.preferredLocation || 'N/A', isFranchise: form.isFranchise ? 'Yes' : 'No',
       message: form.message || 'N/A'
     };
     try {
-      const r = await fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(payload) });
+      const endpoint = `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/contact`;
+      const r = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(payload) });
       const res = await r.json();
       if (res.success) {
         setSent(true);

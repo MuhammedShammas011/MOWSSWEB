@@ -149,14 +149,15 @@ export default function BookingPage({ onNavigate, preselectedPlan = '' }) {
     setIsSubmitting(true);
     const dateStr = form.date ? form.date.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : 'N/A';
     const payload = {
-      access_key: 'c6530d45-5dc2-4001-bc5c-5022e62a6bc1',
-      subject: isEnquiry ? `New Enquiry from ${form.name}` : `New Booking: ${form.space} at Mows ${form.location}`,
       name: form.name, email: form.email, phone: form.phone, company: form.company || 'N/A',
       type: isEnquiry ? 'Enquiry' : 'Booking',
+      message: isEnquiry ? 'Enquiry form submitted' : 'Booking form submitted'
     };
     if (!isEnquiry) { Object.assign(payload, { space: form.space, location: form.location, duration: form.duration, startDate: dateStr, addons: selectedAddons.length ? selectedAddons.map(id => ADDONS.find(a => a.id === id)?.label).join(', ') : 'None', customFeatures: form.customFeatures?.length ? form.customFeatures.join(', ') : 'None' }); }
     try {
-      const r = await fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(payload) });
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const endpoint = isEnquiry ? `${baseUrl}/api/contact` : `${baseUrl}/api/booking`;
+      const r = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(payload) });
       const res = await r.json();
       if (res.success) {
         setDone(true);
