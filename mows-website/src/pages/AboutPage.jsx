@@ -37,16 +37,16 @@ const founders = [
 ];
 
 const timeline = [
-  { year: '2021', title: 'The Idea', desc: 'Two friends, frustrated by the lack of professional workspaces in Malappuram, sketch out a bold concept on a napkin at a local cafe.' },
-  { year: '2022', title: 'Planning & Design', desc: 'Months of research, community interviews, and design iterations shape the blueprint for what Mows would become — a workspace built around people.' },
-  { year: '2023', title: 'Mows Manjeri Opens', desc: 'The flagship Mows Manjeri launches with 250 seats, a podcast studio, photo studio, and an electric community of founding members.' },
+  { year: '2023', title: 'The Idea', desc: 'Two friends, frustrated by the lack of professional workspaces in Malappuram, sketch out a bold concept on a napkin at a local cafe.' },
+  { year: '2023', title: 'Planning & Design', desc: 'Months of research, community interviews, and design iterations shape the blueprint for what Mows would become — a workspace built around people.' },
+  { year: '2024', title: 'Mows Manjeri Opens', desc: 'The flagship Mows Manjeri launches with 250 seats, a podcast studio, photo studio, and an electric community of founding members.' },
   { year: '2024', title: 'Expansion Begins', desc: 'Mows announces locations in Kozhikode and Perinthalmanna, bringing the same premium coworking experience to more of Kerala.' },
   { year: '2025+', title: 'The Future', desc: 'With a franchise model and growing demand, Mows is on track to become Kerala\'s leading network of premium coworking spaces.' },
 ];
 
 const stats = [
-  { value: '200+', label: 'Active Members' },
-  { value: '2021', label: 'Founded' },
+  { value: '210+', label: 'Active Members' },
+  { value: '2023', label: 'Founded' },
   { value: '100%', label: 'Community Built' },
 ];
 
@@ -122,99 +122,99 @@ export default function AboutPage({ onNavigate }) {
       {/* Shared Grid Wrapper for Hero and Stats */}
       <div style={{ position: 'relative', backgroundImage: 'linear-gradient(rgba(19, 34, 28, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(19, 34, 28, 0.05) 1px, transparent 1px)', backgroundSize: '24px 24px' }}>
 
-      {/* Hero */}
-      <section style={{
-        padding: '8rem 2rem 6rem',
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', textAlign: 'left', position: 'relative', zIndex: 2 }}>
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            style={{ display: 'inline-block', background: yellow, border: '3px solid #13221C', boxShadow: '4px 4px 0px #13221C', borderRadius: 6, padding: '6px 16px', fontSize: 12, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', color: textDark, marginBottom: '1.5rem' }}
-          >
-            Our Story
-          </motion.div>
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            style={{ fontSize: 'clamp(2.8rem, 7vw, 5.5rem)', fontWeight: 900, lineHeight: 1.05, margin: '0 0 1.5rem', color: textDark, letterSpacing: '-0.03em' }}
-          >
-            <HoverText text="We did not find the" defaultColor={textDark} hoverColor={textLight} /><br />
-            <span style={{
-              color: '#174F50',
-              WebkitTextStroke: '1px #13221C',
-              textShadow: '4px 4px 0px #13221C',
-              display: 'inline-block',
-            }}>
-              <HoverText text="workspace we wanted." defaultColor="#174F50" hoverColor="#174F50" />
-            </span>
-            <br />
-            <HoverText text="So we built it." defaultColor={textDark} hoverColor={textLight} />
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            style={{ fontSize: 18, lineHeight: 1.7, color: textDark, maxWidth: 640, fontWeight: 600, margin: 0 }}
-          >
-            Three founders, united by one mission: disrupting industries, challenging limits, and leading MOWS with passion, creativity, and relentless determination to redefine what’s possible.
-          </motion.p>
-        </div>
-      </section>
-
-      {/* Stats Bar */}
-      <section style={{ 
-        padding: '2.5rem 2rem', 
-        position: 'relative', 
-        overflow: 'hidden'
-      }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', gap: 16, flexWrap: 'wrap', position: 'relative' }}>
-          {/* Connector line behind */}
-          <div style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            width: '100vw',
-            height: 4,
-            backgroundColor: '#13221C',
-            transform: 'translate(-50%, -50%)',
-            zIndex: 0
-          }}></div>
-
-          {stats.map((s, i) => (
-            <div key={i} style={{ 
-              background: '#d1fae5', 
-              border: '3px solid #13221C', 
-              borderRadius: 12, 
-              padding: '1.25rem 1.5rem', 
-              flex: 1, 
-              minWidth: 150, 
-              boxShadow: '6px 6px 0px #13221C', 
-              textAlign: 'center', 
-              position: 'relative', 
-              zIndex: 1,
-              transition: 'transform 0.15s, box-shadow 0.15s',
-              cursor: 'default'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translate(-2px, -2px)';
-              e.currentTarget.style.boxShadow = '8px 8px 0px #13221C';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translate(0, 0)';
-              e.currentTarget.style.boxShadow = '6px 6px 0px #13221C';
-            }}
+        {/* Hero */}
+        <section style={{
+          padding: '8rem 2rem 6rem',
+          position: 'relative',
+          overflow: 'hidden'
+        }}>
+          <div style={{ maxWidth: 1100, margin: '0 auto', textAlign: 'left', position: 'relative', zIndex: 2 }}>
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              style={{ display: 'inline-block', background: yellow, border: '3px solid #13221C', boxShadow: '4px 4px 0px #13221C', borderRadius: 6, padding: '6px 16px', fontSize: 12, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', color: textDark, marginBottom: '1.5rem' }}
             >
-              <p style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: 900, margin: 0, color: '#000', letterSpacing: '-0.02em' }}>{s.value}</p>
-              <p style={{ fontSize: 11, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', margin: '6px 0 0', color: '#174F50' }}>{s.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+              Our Story
+            </motion.div>
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              style={{ fontSize: 'clamp(2.8rem, 7vw, 5.5rem)', fontWeight: 900, lineHeight: 1.05, margin: '0 0 1.5rem', color: textDark, letterSpacing: '-0.03em' }}
+            >
+              <HoverText text="We did not find the" defaultColor={textDark} hoverColor={textLight} /><br />
+              <span style={{
+                color: '#174F50',
+                WebkitTextStroke: '1px #13221C',
+                textShadow: '4px 4px 0px #13221C',
+                display: 'inline-block',
+              }}>
+                <HoverText text="workspace we wanted." defaultColor="#174F50" hoverColor="#174F50" />
+              </span>
+              <br />
+              <HoverText text="So we built it." defaultColor={textDark} hoverColor={textLight} />
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              style={{ fontSize: 18, lineHeight: 1.7, color: textDark, maxWidth: 640, fontWeight: 600, margin: 0 }}
+            >
+              Three founders, united by one mission: disrupting industries, challenging limits, and leading MOWS with passion, creativity, and relentless determination to redefine what’s possible.
+            </motion.p>
+          </div>
+        </section>
+
+        {/* Stats Bar */}
+        <section style={{
+          padding: '2.5rem 2rem',
+          position: 'relative',
+          overflow: 'hidden'
+        }}>
+          <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', gap: 16, flexWrap: 'wrap', position: 'relative' }}>
+            {/* Connector line behind */}
+            <div style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              width: '100vw',
+              height: 4,
+              backgroundColor: '#13221C',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 0
+            }}></div>
+
+            {stats.map((s, i) => (
+              <div key={i} style={{
+                background: '#d1fae5',
+                border: '3px solid #13221C',
+                borderRadius: 12,
+                padding: '1.25rem 1.5rem',
+                flex: 1,
+                minWidth: 150,
+                boxShadow: '6px 6px 0px #13221C',
+                textAlign: 'center',
+                position: 'relative',
+                zIndex: 1,
+                transition: 'transform 0.15s, box-shadow 0.15s',
+                cursor: 'default'
+              }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translate(-2px, -2px)';
+                  e.currentTarget.style.boxShadow = '8px 8px 0px #13221C';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translate(0, 0)';
+                  e.currentTarget.style.boxShadow = '6px 6px 0px #13221C';
+                }}
+              >
+                <p style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: 900, margin: 0, color: '#000', letterSpacing: '-0.02em' }}>{s.value}</p>
+                <p style={{ fontSize: 11, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', margin: '6px 0 0', color: '#174F50' }}>{s.label}</p>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
 
       {/* Origin Story */}
@@ -228,7 +228,7 @@ export default function AboutPage({ onNavigate }) {
                 A napkin sketch in a Manjeri cafe.
               </h2>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: textDark, fontWeight: 600, margin: '0 0 1rem', opacity: 0.85 }}>
-                In 2021, two childhood friends sat across a table in Manjeri, both struggling with the same problem: nowhere in their hometown offered the kind of professional environment needed to build something great.
+                In 2023, two childhood friends sat across a table in Manjeri, both struggling with the same problem: nowhere in their hometown offered the kind of professional environment needed to build something great.
               </p>
               <p style={{ fontSize: 16, lineHeight: 1.8, color: textDark, fontWeight: 600, margin: 0, opacity: 0.85 }}>
                 They mapped out a coworking space concept — one with professional amenities, a real community, and no compromise on quality. That sketch became Mows. What started as a single floor in Manjeri is now a growing network across Kerala.
@@ -239,9 +239,9 @@ export default function AboutPage({ onNavigate }) {
           <FadeInWhenVisible delay={0.15}>
             <div className="origin-stats-grid" style={{ gap: '1rem' }}>
               {[
-                { label: 'Founded', value: '2021', bg: yellow, light: false },
-                { label: 'First Member', value: '2023', bg: '#fff', light: false },
-                { label: 'Cities', value: '3', bg: textLight, light: true },
+                { label: 'Founded', value: '2023', bg: yellow, light: false },
+                { label: 'Events', value: '50+', bg: '#fff', light: false },
+                { label: 'Members', value: '210+', bg: textLight, light: true },
                 { label: 'Our Goal', value: '10+ cities', bg: '#fff', light: false },
               ].map((c, i) => (
                 <div key={i} style={{
@@ -387,17 +387,17 @@ export default function AboutPage({ onNavigate }) {
 
           <div style={{ position: 'relative', paddingBottom: '2rem' }}>
             {/* Animated Vertical Line */}
-            <motion.div 
+            <motion.div
               className="journey-line"
               initial={{ height: 0 }}
               whileInView={{ height: '100%' }}
               viewport={{ once: true, margin: '-10%' }}
               transition={{ duration: 1.5, ease: 'easeInOut' }}
-              style={{ position: 'absolute', left: 40, top: 0, width: 8, background: textDark, transform: 'translateX(-50%)', zIndex: 1 }} 
+              style={{ position: 'absolute', left: 40, top: 0, width: 8, background: textDark, transform: 'translateX(-50%)', zIndex: 1 }}
             />
-            
+
             {timeline.map((t, i) => (
-              <motion.div 
+              <motion.div
                 key={i}
                 initial={{ opacity: 0, x: 60, y: 20 }}
                 whileInView={{ opacity: 1, x: 0, y: 0 }}
@@ -406,17 +406,17 @@ export default function AboutPage({ onNavigate }) {
                 style={{ position: 'relative', marginBottom: i === timeline.length - 1 ? 0 : '4rem', display: 'flex' }}
               >
                 {/* Year Marker on the line */}
-                <div className="journey-marker" style={{ 
-                  width: 80, height: 40, 
-                  background: i % 2 === 0 ? yellow : textLight, 
-                  border: '4px solid #13221C', 
+                <div className="journey-marker" style={{
+                  width: 80, height: 40,
+                  background: i % 2 === 0 ? yellow : textLight,
+                  border: '4px solid #13221C',
                   borderRadius: 0,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', 
-                  fontWeight: 900, fontSize: 14, color: i % 2 === 0 ? textDark : '#fff', 
-                  boxShadow: '4px 4px 0px #13221C', 
-                  position: 'absolute', left: 40, top: 0, 
-                  transform: 'translate(-50%, 0)', 
-                  zIndex: 3 
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontWeight: 900, fontSize: 14, color: i % 2 === 0 ? textDark : '#fff',
+                  boxShadow: '4px 4px 0px #13221C',
+                  position: 'absolute', left: 40, top: 0,
+                  transform: 'translate(-50%, 0)',
+                  zIndex: 3
                 }}>
                   {t.year}
                 </div>
@@ -429,10 +429,10 @@ export default function AboutPage({ onNavigate }) {
                   className="journey-card"
                   whileHover={{ scale: 1.02, x: 8 }}
                   transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                  style={{ 
+                  style={{
                     marginLeft: 100,
-                    background: '#fff', border: '4px solid #13221C', borderRadius: 0, 
-                    padding: '2.5rem', boxShadow: '10px 10px 0px #13221C', 
+                    background: '#fff', border: '4px solid #13221C', borderRadius: 0,
+                    padding: '2.5rem', boxShadow: '10px 10px 0px #13221C',
                     flex: 1, position: 'relative',
                     borderTopLeftRadius: 32, borderBottomRightRadius: 32
                   }}
@@ -502,10 +502,10 @@ export default function AboutPage({ onNavigate }) {
                   {/* SVG Icon box */}
                   <div style={{ width: 48, height: 48, background: textDark, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.2rem', flexShrink: 0 }}>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      {i === 0 && <><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></>}
-                      {i === 1 && <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>}
-                      {i === 2 && <><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>}
-                      {i === 3 && <><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></>}
+                      {i === 0 && <><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></>}
+                      {i === 1 && <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />}
+                      {i === 2 && <><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></>}
+                      {i === 3 && <><polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" /></>}
                     </svg>
                   </div>
 
@@ -525,33 +525,33 @@ export default function AboutPage({ onNavigate }) {
       <section style={{ padding: '6rem 2rem', textAlign: 'center', background: '#d1fae5', borderBottom: '4px solid #13221C', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(19, 34, 28, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(19, 34, 28, 0.05) 1px, transparent 1px)', backgroundSize: '24px 24px', pointerEvents: 'none' }} />
         <div style={{ position: 'relative', zIndex: 2 }}>
-        <FadeInWhenVisible>
-          <p style={{ fontSize: 12, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', color: textLight, marginBottom: '1rem' }}>Join the movement</p>
-          <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, color: textDark, margin: '0 0 1.5rem', letterSpacing: '-0.02em' }}>
-            Be part of something bigger.
-          </h2>
-          <p style={{ fontSize: 16, lineHeight: 1.7, color: textDark, opacity: 0.75, fontWeight: 600, maxWidth: 480, margin: '0 auto 2.5rem' }}>
-            Whether you are a freelancer, startup, or enterprise — there is a seat at Mows waiting for you.
-          </p>
-          <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <motion.button
-              whileHover={{ y: -4, boxShadow: '8px 8px 0px #13221C' }}
-              whileTap={{ y: 0, boxShadow: '2px 2px 0px #13221C' }}
-              onClick={() => onNavigate('spaces')}
-              style={{ background: textDark, color: '#fff', border: '3px solid #13221C', borderRadius: 10, padding: '18px 36px', fontSize: 16, fontWeight: 900, cursor: 'pointer', textTransform: 'uppercase', boxShadow: '5px 5px 0px #13221C', transition: 'box-shadow 0.15s, transform 0.15s' }}
-            >
-              See our spaces
-            </motion.button>
-            <motion.button
-              whileHover={{ y: -4, boxShadow: '8px 8px 0px #13221C' }}
-              whileTap={{ y: 0, boxShadow: '2px 2px 0px #13221C' }}
-              onClick={() => onNavigate('contact')}
-              style={{ background: '#fff', color: textDark, border: '3px solid #13221C', borderRadius: 10, padding: '18px 36px', fontSize: 16, fontWeight: 900, cursor: 'pointer', textTransform: 'uppercase', boxShadow: '5px 5px 0px #13221C', transition: 'box-shadow 0.15s, transform 0.15s' }}
-            >
-              Get in touch
-            </motion.button>
-          </div>
-        </FadeInWhenVisible>
+          <FadeInWhenVisible>
+            <p style={{ fontSize: 12, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', color: textLight, marginBottom: '1rem' }}>Join the movement</p>
+            <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, color: textDark, margin: '0 0 1.5rem', letterSpacing: '-0.02em' }}>
+              Be part of something bigger.
+            </h2>
+            <p style={{ fontSize: 16, lineHeight: 1.7, color: textDark, opacity: 0.75, fontWeight: 600, maxWidth: 480, margin: '0 auto 2.5rem' }}>
+              Whether you are a freelancer, startup, or enterprise — there is a seat at Mows waiting for you.
+            </p>
+            <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <motion.button
+                whileHover={{ y: -4, boxShadow: '8px 8px 0px #13221C' }}
+                whileTap={{ y: 0, boxShadow: '2px 2px 0px #13221C' }}
+                onClick={() => onNavigate('spaces')}
+                style={{ background: textDark, color: '#fff', border: '3px solid #13221C', borderRadius: 10, padding: '18px 36px', fontSize: 16, fontWeight: 900, cursor: 'pointer', textTransform: 'uppercase', boxShadow: '5px 5px 0px #13221C', transition: 'box-shadow 0.15s, transform 0.15s' }}
+              >
+                See our spaces
+              </motion.button>
+              <motion.button
+                whileHover={{ y: -4, boxShadow: '8px 8px 0px #13221C' }}
+                whileTap={{ y: 0, boxShadow: '2px 2px 0px #13221C' }}
+                onClick={() => onNavigate('contact')}
+                style={{ background: '#fff', color: textDark, border: '3px solid #13221C', borderRadius: 10, padding: '18px 36px', fontSize: 16, fontWeight: 900, cursor: 'pointer', textTransform: 'uppercase', boxShadow: '5px 5px 0px #13221C', transition: 'box-shadow 0.15s, transform 0.15s' }}
+              >
+                Get in touch
+              </motion.button>
+            </div>
+          </FadeInWhenVisible>
         </div>
       </section>
 
