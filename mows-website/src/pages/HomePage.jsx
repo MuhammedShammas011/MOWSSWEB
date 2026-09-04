@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import useSEO from '../hooks/useSEO';
 import { locations, amenities, testimonials } from '../data';
 import { motion, AnimatePresence } from 'framer-motion';
 import FlowArt, { FlowSection } from '../components/ui/story-scroll';
@@ -64,6 +65,8 @@ const col1Images = [heroImg3, heroImg4, eventImg2];
 const col2Images = [heroImg5, eventImg3, eventImg4];
 
 export default function HomePage({ onNavigate }) {
+  useSEO({ title: 'Premium Coworking Spaces in Kerala', description: 'Mows provides premium coworking spaces for professionals, startups, and enterprises in Kerala.', url: '/' });
+
   // Each column has its own independent image index + different interval
   const [col0, setCol0] = useState(0);
   const [col1, setCol1] = useState(0);

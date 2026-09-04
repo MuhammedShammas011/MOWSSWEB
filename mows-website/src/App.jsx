@@ -11,6 +11,7 @@ import EventsPage from './pages/EventsPage';
 import CustomPackagePage from './pages/CustomPackagePage';
 import AmenityDetailPage from './pages/AmenityDetailPage';
 import AboutPage from './pages/AboutPage';
+import FAQ from './components/FAQ';
 import { AnimatePresence } from 'framer-motion';
 import AnimatedPage from './components/AnimatedPage';
 
@@ -123,6 +124,7 @@ export default function App() {
       <AnimatePresence mode="wait">
         {renderPage()}
       </AnimatePresence>
+      {!noFooter.includes(page) && <FAQ />}
       {!noFooter.includes(page) && <Footer onNavigate={navigateTo} />}
     </div>
   );

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import useSEO from '../hooks/useSEO';
 import { events } from '../data';
 import { motion } from 'framer-motion';
 import { Clock, MapPin } from 'lucide-react';
@@ -39,6 +40,8 @@ const yellow = '#fde047';
 const bg = '#fcfaf5';
 
 export default function EventsPage({ onNavigate }) {
+  useSEO({ title: 'Events & Workshops | Mows', description: 'Stay updated with the latest events and workshops at Mows.', url: '/events' });
+
   const [filter, setFilter] = useState('All');
 
   const eventImages = [eventDemo1, eventDemo2, eventDemo3, eventDemo4, eventDemo5];

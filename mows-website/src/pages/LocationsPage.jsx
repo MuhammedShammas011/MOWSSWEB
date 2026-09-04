@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useSEO from '../hooks/useSEO';
 import { locations } from '../data';
 import LocationIcon from '../assets/LocationBlack.png';
 import ArielViewImg from '../assets/DubaiArielView.jpg';
@@ -47,6 +48,8 @@ function availLabel(avail) {
 }
 
 export default function LocationsPage({ onNavigate }) {
+  useSEO({ title: 'Locations | Mows Coworking', description: 'Explore Mows coworking locations across Kerala.', url: '/locations' });
+
   const [view, setView] = useState('list');
   const [activeId, setActiveId] = useState(null);
   const [playing, setPlaying] = useState(false);

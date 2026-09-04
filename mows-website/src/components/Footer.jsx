@@ -87,11 +87,15 @@ export default function Footer({ onNavigate }) {
                 <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 16 }}>
                   {items.map(item => (
                     <li key={item}>
-                      <button onClick={() => handleNav(item)}
+                      <a 
+                        href={linkMap[item] ? `/${linkMap[item]}` : '#'} 
+                        onClick={(e) => { 
+                          if (linkMap[item]) { e.preventDefault(); handleNav(item); }
+                        }}
                         style={{
                           background: 'none', border: 'none', padding: '4px 8px', marginLeft: '-8px',
-                          fontSize: 16, color: '#13221C', cursor: linkMap[item] ? 'pointer' : 'default',
-                          transition: 'all 0.15s', textAlign: 'left', fontWeight: 700, borderRadius: 4
+                          fontSize: 16, color: '#13221C', cursor: linkMap[item] ? 'pointer' : 'default', textDecoration: 'none',
+                          transition: 'all 0.15s', textAlign: 'left', fontWeight: 700, borderRadius: 4, display: 'inline-block'
                         }}
                         onMouseEnter={e => {
                           if (linkMap[item]) {
@@ -108,7 +112,7 @@ export default function Footer({ onNavigate }) {
                           }
                         }}>
                         {item}
-                      </button>
+                      </a>
                     </li>
                   ))}
                 </ul>

@@ -52,8 +52,9 @@ export default function Navbar({ currentPage, onNavigate }) {
           transition={{ type: 'spring', stiffness: 200, damping: 20 }}
         >
           {/* Center Circular Logo Container */}
-          <motion.button
-            onClick={() => go('home')}
+          <motion.a
+            href="/"
+            onClick={(e) => { e.preventDefault(); go('home'); }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             initial={{ x: "-50%", y: "50%" }}
@@ -86,19 +87,20 @@ export default function Navbar({ currentPage, onNavigate }) {
               animate={{ rotateY: 360 }}
               transition={{ repeat: Infinity, duration: 4, ease: 'linear' }}
             />
-          </motion.button>
+          </motion.a>
 
           {/* Left: Brand / Logo */}
           <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
-            <motion.button
+            <motion.a
+              href="/"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => go('home')}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', padding: 0 }}
+              onClick={(e) => { e.preventDefault(); go('home'); }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', padding: 0, textDecoration: 'none' }}
               className="interactive"
             >
               <img src={fullLogo} alt="MOWS Logo" style={{ height: '45px', width: 'auto', display: 'block' }} />
-            </motion.button>
+            </motion.a>
           </div>
 
           {/* Desktop Nav */}
@@ -107,15 +109,16 @@ export default function Navbar({ currentPage, onNavigate }) {
               const pageKey = l.label.toLowerCase();
               const active = currentPage === pageKey;
               return (
-                <motion.button
+                <motion.a
                   key={l.path}
-                  onClick={() => go(pageKey)}
+                  href={l.path}
+                  onClick={(e) => { e.preventDefault(); go(pageKey); }}
                   className="interactive"
                   whileHover={{ scale: 1.05, backgroundColor: 'rgba(23, 79, 80,0.03)' }}
                   whileTap={{ scale: 0.95 }}
                   style={{
                     background: active ? 'rgba(23, 79, 80,0.06)' : 'transparent',
-                    border: 'none', cursor: 'pointer',
+                    border: 'none', cursor: 'pointer', textDecoration: 'none',
                     fontSize: 16, color: active ? textDark : textLight,
                     fontWeight: active ? 700 : 600,
                     transition: 'color 0.2s', letterSpacing: '0.01em',
@@ -140,27 +143,28 @@ export default function Navbar({ currentPage, onNavigate }) {
                       }}
                     />
                   )}
-                </motion.button>
+                </motion.a>
               );
             })}
           </div>
 
           {/* CTA */}
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginLeft: 'auto' }} className="desktop-nav">
-            <motion.button
-              onClick={() => go('booking')}
+            <motion.a
+              href="/booking"
+              onClick={(e) => { e.preventDefault(); go('booking'); }}
               className="interactive"
               whileHover={{ y: 2, x: 2, boxShadow: '2px 2px 0px #13221C' }}
               whileTap={{ y: 4, x: 4, boxShadow: '0px 0px 0px #13221C', scale: 0.98 }}
               style={{
                 background: textDark, color: '#fff', border: '2px solid #13221C', borderRadius: 100,
-                padding: '12px 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer',
+                padding: '12px 24px', fontSize: 14, fontWeight: 700, cursor: 'pointer', textDecoration: 'none',
                 letterSpacing: '0.02em', boxShadow: '4px 4px 0px #13221C',
                 transition: 'box-shadow 0.15s ease, transform 0.15s ease',
               }}
             >
               Book a desk
-            </motion.button>
+            </motion.a>
           </div>
 
           {/* Mobile hamburger */}
@@ -200,9 +204,10 @@ export default function Navbar({ currentPage, onNavigate }) {
             {navLinks.map((l, i) => {
               const pageKey = l.label.toLowerCase();
               return (
-                <motion.button
+                <motion.a
                   key={l.path}
-                  onClick={() => go(pageKey)}
+                  href={l.path}
+                  onClick={(e) => { e.preventDefault(); go(pageKey); }}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0, transition: { delay: i * 0.05 } }}
                   style={{
@@ -213,12 +218,13 @@ export default function Navbar({ currentPage, onNavigate }) {
                     fontWeight: currentPage === pageKey ? 800 : 600,
                     textAlign: 'left', cursor: 'pointer',
                     fontFamily: "'Clash Grotesk', sans-serif",
-                    transition: 'all 0.2s'
+                    transition: 'all 0.2s',
+                    textDecoration: 'none'
                   }}
                   className="interactive"
                 >
                   {l.label}
-                </motion.button>
+                </motion.a>
               );
             })}
             <motion.div

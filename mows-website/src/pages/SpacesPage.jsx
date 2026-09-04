@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import useSEO from '../hooks/useSEO';
 import { plans, locations } from '../data';
 import LocationIcon from '../assets/LocationBlack.png';
 import spaceDemo1 from '../assets/SpaceDemo-1.jpg';
@@ -89,6 +90,8 @@ const HoverText = ({ text, defaultColor, hoverColor }) => {
 // TiltCard removed as it does not match neo-brutalist aesthetic
 
 export default function SpacesPage({ onNavigate }) {
+  useSEO({ title: 'Coworking Spaces & Desks | Mows', description: 'Discover dedicated desks, private cabins, and event spaces at Mows.', url: '/spaces' });
+
   const [annual, setAnnual] = useState(false);
   const [selectedLocId, setSelectedLocId] = useState(1);
 

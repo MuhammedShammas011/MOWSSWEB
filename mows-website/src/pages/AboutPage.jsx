@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import useSEO from '../hooks/useSEO';
 import { motion, useInView } from 'framer-motion';
 import shahilImg from '../assets/Shahil Mohammed K.jpg';
 import nihalImg from '../assets/Mohammed Nihal C.jpg';
@@ -91,6 +92,8 @@ const HoverText = ({ text, defaultColor, hoverColor }) => {
 };
 
 export default function AboutPage({ onNavigate }) {
+  useSEO({ title: 'Our Story | Mows Coworking', description: 'Learn about the founders, values, and journey behind Mows.', url: '/about' });
+
   return (
     <div style={{ background: bg, minHeight: '100vh', fontFamily: "'Clash Grotesk', sans-serif", color: textDark }}>
       <style>{`

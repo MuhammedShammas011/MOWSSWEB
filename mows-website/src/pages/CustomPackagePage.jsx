@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import useSEO from '../hooks/useSEO';
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
 
@@ -25,6 +26,8 @@ const DURATIONS = ['1 month', '3 months', '6 months', '1 year', 'Custom'];
 const SPACE_TYPES = ['Hot Desk', 'Dedicated Desk', 'Private Cabin'];
 
 export default function CustomPackagePage({ onNavigate }) {
+  useSEO({ title: 'Custom Enterprise Packages | Mows', description: 'Tailored office solutions for large teams and enterprises.', url: '/custom-package' });
+
   const [selectedServices, setSelectedServices] = useState([]);
   const [space, setSpace] = useState('');
   const [location, setLocation] = useState('');

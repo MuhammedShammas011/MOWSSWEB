@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import useSEO from '../hooks/useSEO';
 import { ArrowLeft, Wifi, Coffee, MonitorPlay, Mic, Camera, Gamepad2, Lock, Car } from 'lucide-react';
 
 const textDark = '#13221C';
@@ -131,6 +132,7 @@ const amenityDetails = {
 
 export default function AmenityDetailPage({ amenitySlug, onNavigate }) {
   const amenity = amenityDetails[amenitySlug];
+  useSEO({ title: amenity ? `${amenity.label} | Mows Amenities` : 'Amenity | Mows', description: amenity?.description || '', url: `/amenity-${amenitySlug}` });
 
   function goBackToAmenities() {
     onNavigate('home#amenities-section');

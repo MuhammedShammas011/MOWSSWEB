@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useSEO from '../hooks/useSEO';
 import { Lock, Printer, Target, Car, Coffee, Mail, ShieldCheck, CheckCircle2, Download, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import logoIconImg from '../assets/Logo MOWS Secondary Colors-06 1.png';
@@ -94,6 +95,8 @@ function MiniCalendar({ selected, onSelect }) {
 function fmt(n) { return '₹' + n.toLocaleString('en-IN'); }
 
 export default function BookingPage({ onNavigate, preselectedPlan = '' }) {
+  useSEO({ title: 'Book a Space | Mows', description: 'Book your perfect workspace or schedule an enquiry with Mows today.', url: '/booking' });
+
   let parsedCustom = null;
   if (typeof preselectedPlan === 'string' && preselectedPlan.startsWith('{')) {
     try { parsedCustom = JSON.parse(preselectedPlan); } catch(e){}

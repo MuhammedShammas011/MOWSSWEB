@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useSEO from '../hooks/useSEO';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import LocationIcon from '../assets/LocationBlack.png';
@@ -51,6 +52,8 @@ const HoverText = ({ text, defaultColor, hoverColor }) => {
 };
 
 export default function CommunityPage({ onNavigate }) {
+  useSEO({ title: 'Community & Network | Mows', description: 'Join the vibrant Mows community of creators and founders.', url: '/community' });
+
   const [rsvpd, setRsvpd] = useState(new Set());
   const [spotCounts, setSpotCounts] = useState(() => Object.fromEntries(events.map(e => [e.id, e.spots])));
   const [showToast, setShowToast] = useState(false);
