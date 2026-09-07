@@ -1,41 +1,11 @@
 import { useRef } from 'react';
 import useSEO from '../hooks/useSEO';
 import { motion, useInView } from 'framer-motion';
-import shahilImg from '../assets/Shahil Mohammed K.jpg';
-import nihalImg from '../assets/Mohammed Nihal C.jpg';
-import irshadImg from '../assets/Irshad Puthiyakath.jpg';
 
 const textDark = '#13221C';
 const textLight = '#174F50';
 const yellow = '#fde047';
 const bg = '#fcfaf5';
-
-const founders = [
-  {
-    name: 'Shahil Mohammed K',
-    role: 'CEO, Co-Founder',
-    initials: 'MS',
-    color: '#fde047',
-    image: shahilImg,
-    quote: 'Leads vision, strategy, decisions, growth, operations, and overall company success.',
-  },
-  {
-    name: 'Muhammed Nihal C',
-    role: 'COO, Co-Founder',
-    initials: 'MN',
-    color: '#d1fae5',
-    image: nihalImg,
-    quote: 'Manages operations, efficiency, processes, resources, and ensures seamless business execution',
-  },
-  {
-    name: 'Irshad Puthiyakath',
-    role: 'CMO, Co-Founder',
-    initials: 'IP',
-    color: '#bfdbfe',
-    image: irshadImg,
-    quote: 'Drives marketing strategy, branding, customer engagement, growth, and market positioning',
-  },
-];
 
 const timeline = [
   { year: '2023', title: 'The Idea', desc: 'Two friends, frustrated by the lack of professional workspaces in Malappuram, sketch out a bold concept on a napkin at a local cafe.' },
@@ -260,118 +230,6 @@ export default function AboutPage({ onNavigate }) {
               ))}
             </div>
           </FadeInWhenVisible>
-        </div>
-      </section>
-
-      {/* Founders */}
-      <section style={{ padding: '6rem 2rem', position: 'relative', overflow: 'hidden', borderBottom: '4px solid #13221C' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(19, 34, 28, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(19, 34, 28, 0.05) 1px, transparent 1px)', backgroundSize: '24px 24px', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 2 }}>
-          <FadeInWhenVisible>
-            <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-              <p style={{ display: 'inline-block', background: yellow, border: '3px solid #13221C', boxShadow: '4px 4px 0px #13221C', borderRadius: 6, padding: '6px 16px', fontSize: 12, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', color: textDark, marginBottom: '1rem' }}>The People Behind Mows</p>
-              <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, color: textDark, margin: 0, letterSpacing: '-0.02em' }}>Meet the Founders</h2>
-            </div>
-          </FadeInWhenVisible>
-
-          <div className="founders-grid" style={{ gap: '2rem' }}>
-            {founders.map((f, i) => (
-              <FadeInWhenVisible key={i} delay={i * 0.12}>
-                <motion.div
-                  whileHover={{ y: -6, rotate: 0.4 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 18 }}
-                  style={{
-                    background: '#fff',
-                    border: '4px solid #13221C',
-                    borderRadius: 0,
-                    boxShadow: '8px 8px 0px #13221C',
-                    position: 'relative',
-                    overflow: 'visible',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: '100%',
-                  }}
-                >
-                  {/* 9:16 Portrait Photo Area */}
-                  <div style={{
-                    width: '100%',
-                    aspectRatio: '9/16',
-                    maxHeight: 420,
-                    background: f.image
-                      ? `url(${f.image}) ${f.photoPosition || 'center'}/cover no-repeat`
-                      : `linear-gradient(145deg, ${f.color} 0%, ${f.color}cc 100%)`,
-                    position: 'relative',
-                    overflow: 'hidden',
-                    borderBottom: '4px solid #13221C',
-                    flexShrink: 0,
-                  }}>
-                    {/* Diagonal slash accent */}
-                    <div style={{
-                      position: 'absolute', bottom: 0, left: 0,
-                      width: '100%', height: 70,
-                      background: '#13221C',
-                      clipPath: 'polygon(0 60%, 100% 0%, 100% 100%, 0% 100%)',
-                    }} />
-
-                    {/* Initials watermark */}
-                    {!f.image && (
-                      <span style={{
-                        position: 'absolute', top: '50%', left: '50%',
-                        transform: 'translate(-50%, -60%)',
-                        fontSize: 96, fontWeight: 900, color: '#13221C', opacity: 0.12,
-                        lineHeight: 1, userSelect: 'none',
-                      }}>
-                        {f.initials}
-                      </span>
-                    )}
-
-                    {/* Role badge — pinned to bottom of photo, overlapping the slash */}
-                    <div style={{
-                      position: 'absolute', bottom: 12, left: 20,
-                      background: yellow,
-                      border: '2.5px solid #13221C',
-                      boxShadow: '3px 3px 0px #13221C',
-                      padding: '4px 12px',
-                      fontSize: 11, fontWeight: 900,
-                      textTransform: 'uppercase', letterSpacing: '0.1em',
-                      color: textDark,
-                      zIndex: 4,
-                    }}>
-                      {f.role}
-                    </div>
-                  </div>
-
-                  {/* Info section */}
-                  <div style={{ padding: '1.8rem 1.8rem 2rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                    <p style={{ fontSize: 22, fontWeight: 900, margin: '0 0 1.2rem', color: textDark, letterSpacing: '-0.02em' }}>
-                      {f.name}
-                    </p>
-                    <p style={{
-                      fontSize: 14, fontStyle: 'italic', lineHeight: 1.6,
-                      color: textDark, fontWeight: 700,
-                      margin: '0 0 1.2rem',
-                      paddingLeft: '1rem',
-                      borderLeft: '4px solid #fde047',
-                    }}>
-                      "{f.quote}"
-                    </p>
-                    <p style={{ fontSize: 13, lineHeight: 1.75, color: textDark, fontWeight: 600, opacity: 0.8, margin: 0, marginTop: 'auto' }}>
-                      {f.story}
-                    </p>
-                  </div>
-
-                  {/* Corner accent */}
-                  <div style={{
-                    position: 'absolute', top: -4, right: -4,
-                    width: 32, height: 32,
-                    background: yellow,
-                    border: '3px solid #13221C',
-                    zIndex: 5,
-                  }} />
-                </motion.div>
-              </FadeInWhenVisible>
-            ))}
-          </div>
         </div>
       </section>
 
