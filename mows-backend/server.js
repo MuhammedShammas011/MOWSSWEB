@@ -12,19 +12,19 @@ app.use(express.json());
 
 // Nodemailer Transporter Setup
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || 'smtp.gmail.com',
-  port: process.env.SMTP_PORT || 587,
+  host:  'smtp.gmail.com',
+  port: 587,
   secure: false, // true for 465, false for other ports
   auth: {
-    user: process.env.SMTP_USER, 
-    pass: process.env.SMTP_PASS, 
+    user: "mowshub@gmail.com", 
+    pass: "qhmjoghvsyawcdtk", 
   },
 });
 
 // Verify connection configuration
 transporter.verify(function (error, success) {
   if (error) {
-    console.log('SMTP Connection Error:', error);
+    console.log('SMTP Connection Error:', error.message);
   } else {
     console.log('Server is ready to take our messages');
   }
