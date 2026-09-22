@@ -30,9 +30,13 @@ transporter.verify(function (error, success) {
   }
 });
 
+app.get('/', (req, res) => {
+  res.send({ status: 'OK', message: 'Mows Backend API is running successfully' });
+});
+
 // Endpoint: Contact Form Submission
 app.post('/api/contact', async (req, res) => {
-  const { name, email, phone, company, message } = req.body;
+  const { name, email, phone, company, preferredLocation, isFranchise, message } = req.body;
 
   const mailOptions = {
     from: `"Mows Website" <${process.env.SMTP_USER}>`,
@@ -42,16 +46,20 @@ app.post('/api/contact', async (req, res) => {
       Name: ${name}
       Email: ${email}
       Phone: ${phone}
-      Company: ${company}
-      Message: ${message}
+      Company: ${company || 'N/A'}
+      Preferred Location: ${preferredLocation || 'N/A'}
+      Interested in Franchise: ${isFranchise || 'No'}
+      Message: ${message || 'N/A'}
     `,
     html: `
       <h2>New Contact Request</h2>
       <p><strong>Name:</strong> ${name}</p>
       <p><strong>Email:</strong> ${email}</p>
       <p><strong>Phone:</strong> ${phone}</p>
-      <p><strong>Company:</strong> ${company}</p>
-      <p><strong>Message:</strong> ${message}</p>
+      <p><strong>Company:</strong> ${company || 'N/A'}</p>
+      <p><strong>Preferred Location:</strong> ${preferredLocation || 'N/A'}</p>
+      <p><strong>Interested in Franchise:</strong> ${isFranchise || 'No'}</p>
+      <p><strong>Message:</strong> ${message || 'N/A'}</p>
     `,
   };
 
@@ -61,7 +69,7 @@ app.post('/api/contact', async (req, res) => {
     res.status(200).json({ success: true, message: 'Message sent successfully!' });
   } catch (error) {
     console.error('Error sending email:', error);
-    res.status(500).json({ success: false, message: 'Failed to send message.' });
+    res.status(500).json({ success: false, message: 'Failed to send message.', error: error.message });
   }
 });
 
@@ -103,7 +111,7 @@ app.post('/api/booking', async (req, res) => {
     res.status(200).json({ success: true, message: 'Booking request sent successfully!' });
   } catch (error) {
     console.error('Error sending booking email:', error);
-    res.status(500).json({ success: false, message: 'Failed to send booking request.' });
+    res.status(500).json({ success: false, message: 'Failed to send booking request.', error: error.message });
   }
 });
 
