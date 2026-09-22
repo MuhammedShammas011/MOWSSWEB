@@ -33,7 +33,7 @@ const HoverText = ({ text, defaultColor, hoverColor }) => {
   );
 };
 
-export default function ContactPage({ onNavigate }) {
+export default function ContactPage() {
   useSEO({ title: 'Contact Us | Mows', description: 'Get in touch with the Mows team for any queries or support.', url: '/contact' });
 
   const [form, setForm] = useState({ name: '', email: '', company: '', mobile: '', preferredLocation: '', isFranchise: false, message: '' });
@@ -49,7 +49,8 @@ export default function ContactPage({ onNavigate }) {
       message: form.message || 'N/A'
     };
     try {
-      const endpoint = '/contact.php';
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const endpoint = `${baseUrl}/api/contact`;
       const r = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(payload) });
       const res = await r.json();
       if (res.success) {
