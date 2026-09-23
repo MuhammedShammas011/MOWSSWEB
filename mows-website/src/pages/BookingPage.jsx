@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import useSEO from '../hooks/useSEO';
-import { Lock, Printer, Target, Car, Coffee, Mail, ShieldCheck, CheckCircle2, Download, X } from 'lucide-react';
+import { Lock, Printer, Target, Car, Coffee, Mail, CheckCircle2, Download, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import logoIconImg from '../assets/Logo MOWS Secondary Colors-06 1.png';
 
@@ -9,30 +9,34 @@ const textLight = '#174F50';
 const yellow = '#fde047';
 const bg = '#fcfaf5';
 
-const spaceTypes = ['Hot Desk', 'Dedicated Desk', 'Private Cabin', 'Meeting Room'];
+const spaceTypes = ['Hot Desk', 'Dedicated Desk', 'Private Cabin', 'Meeting Room', 'Studio / Podcast', 'Virtual Office'];
 const locationNames = ['Manjeri', 'Kozhikode', 'Perinthalmanna'];
 const DURATIONS_MAP = {
-  'Hot Desk': ['1 week', '15 days', '1 month', '3 months', '6 months', '1 year'],
+  'Hot Desk': ['1 day', '1 week', '15 days', '1 month', '3 months', '6 months', '1 year'],
   'Dedicated Desk': ['1 week', '15 days', '1 month', '3 months', '6 months', '1 year'],
-  'Private Cabin': ['3 months', '6 months', '1 year'],
-  'Meeting Room': ['1 hr', '2 hr', '3 hr']
+  'Private Cabin': [],
+  'Meeting Room': ['1 hr', '2 hr', '3 hr', '4 hr'],
+  'Studio / Podcast': ['1 hr', '2 hr', '3 hr', '4 hr'],
 };
 
 const PRICING = {
-  'Hot Desk': { 'Day pass': 399, '1 week': 1999, '1 month': 5999, '3 months': 15999, '6 months': 27999, '1 year': 49999 },
-  'Dedicated Desk': { 'Day pass': 699, '1 week': 3499, '1 month': 9999, '3 months': 26999, '6 months': 49999, '1 year': 88999 },
-  'Private Cabin': { 'Day pass': 1499, '1 week': 6999, '1 month': 18999, '3 months': 53999, '6 months': 99999, '1 year': 179999 },
-  'Meeting Room': { 'Day pass': 999, '1 week': 4999, '1 month': 12999, '3 months': 34999, '6 months': 62999, '1 year': 109999 },
+  'Hot Desk': { '1 day': 400, 'Day pass': 400, '1 week': 2500, '15 days': 3000, '1 month': 4100, '3 months': 12000, '6 months': 25000, '1 year': 41000 },
+  'Dedicated Desk': { '1 week': 3000, '15 days': 3500, '1 month': 4600, '3 months': 13000, '6 months': 26000, '1 year': 46000 },
+  'Private Cabin': {},
+  'Meeting Room': { '1 hr': 500, '2 hr': 900, '3 hr': 1300, '4 hr': 2800 },
+  'Studio / Podcast': { '1 hr': 500, '2 hr': 1000, '3 hr': 1400, '4 hr': 2800 },
 };
 
 // Maps Spaces-page plan names → { space, duration } for auto-fill
 const PLAN_MAP = {
-  'Daily Pass': { space: 'Hot Desk', duration: 'Day pass' },
-  '15-Day Pass': { space: 'Hot Desk', duration: '1 week' },
+  'Daily Pass': { space: 'Hot Desk', duration: '1 day' },
+  '15-Day Pass': { space: 'Hot Desk', duration: '15 days' },
   'Monthly Basic': { space: 'Hot Desk', duration: '1 month' },
   'Monthly Pro': { space: 'Dedicated Desk', duration: '1 month' },
-  'Single Cabin': { space: 'Private Cabin', duration: '1 month' },
-  'Group Space': { space: 'Meeting Room', duration: '1 month' },
+  'Single Cabin': { space: 'Private Cabin', duration: '' },
+  'Group Space': { space: 'Meeting Room', duration: '1 hr' },
+  'Studio Session': { space: 'Studio / Podcast', duration: '1 hr' },
+  'Virtual Address': { space: 'Virtual Office', duration: '1 year' },
 };
 
 const ADDONS = [
@@ -99,7 +103,7 @@ export default function BookingPage({ onNavigate, preselectedPlan = '' }) {
 
   let parsedCustom = null;
   if (typeof preselectedPlan === 'string' && preselectedPlan.startsWith('{')) {
-    try { parsedCustom = JSON.parse(preselectedPlan); } catch(e){}
+    try { parsedCustom = JSON.parse(preselectedPlan); } catch (err) { console.error(err); }
   }
 
   const [isEnquiry, setIsEnquiry] = useState(false);
@@ -113,38 +117,80 @@ export default function BookingPage({ onNavigate, preselectedPlan = '' }) {
 
   const [form, setForm] = useState({ space: initSpace, location: initLocation, duration: initDuration, date: null, name: '', email: '', phone: '', company: '', customFeatures: parsedCustom ? parsedCustom.features : [] });
   const [selectedAddons, setSelectedAddons] = useState([]);
-  const [paymentMethod, setPaymentMethod] = useState('card');
-  const [cardDetails, setCardDetails] = useState({ number: '', expiry: '', cvv: '', holder: '' });
-  const [upiId, setUpiId] = useState('');
-  const [payProcessing, setPayProcessing] = useState(false);
-  const [paySuccess, setPaySuccess] = useState(false);
   const [done, setDone] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDownloadToast, setShowDownloadToast] = useState(false);
   const [showToast, setShowToast] = useState(false);
 
-  const basePrice = (form.space && form.duration && PRICING[form.space]) ? (PRICING[form.space][form.duration] || 0) : 0;
+  // Virtual Office & Business Registration States
+  const [voPlan, setVoPlan] = useState('basic'); 
+  const [voRegistration, setVoRegistration] = useState('opc'); 
+  const [voAddons, setVoAddons] = useState([]); 
+
+  function toggleVoAddon(id) {
+    setVoAddons(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+  }
+
+  const getVirtualOfficeDuration = () => {
+    if (voPlan === 'basic') {
+      const extra = [];
+      if (voAddons.includes('drafting')) extra.push('Drafting');
+      if (voAddons.includes('gst_msme')) extra.push('GST+MSME');
+      return `Office Basic Plan (Annual)${extra.length ? ` + ${extra.join(', ')}` : ''}`;
+    }
+    if (voPlan === 'pro') {
+      const extra = [];
+      if (voAddons.includes('llp_reg')) extra.push('LLP Registration');
+      return `Office Pro Plan (Annual)${extra.length ? ` + ${extra.join(', ')}` : ''}`;
+    }
+    if (voPlan === 'reg') {
+      const regMap = { opc: 'OPC Registration', pvtltd: 'Pvt Ltd Registration', partnership: 'Partnership' };
+      const regName = regMap[voRegistration] || 'Company Registration';
+      const extra = voAddons.includes('gst_msme_reg') ? ' + GST+MSME' : '';
+      return `Company Registration — ${regName}${extra}`;
+    }
+    return '';
+  };
+
+  const effectiveDuration = form.space === 'Virtual Office' ? getVirtualOfficeDuration() : form.duration;
+
+  const getVirtualOfficePrice = () => {
+    if (voPlan === 'basic') {
+      let p = 14400;
+      if (voAddons.includes('drafting')) p += 500;
+      if (voAddons.includes('gst_msme')) p += 2000;
+      return p;
+    }
+    if (voPlan === 'pro') {
+      let p = 18000;
+      if (voAddons.includes('llp_reg')) p += 13500;
+      return p;
+    }
+    if (voPlan === 'reg') {
+      let p = voRegistration === 'opc' ? 13500 : (voRegistration === 'pvtltd' ? 16950 : 9322);
+      if (voAddons.includes('gst_msme_reg')) p += 2000;
+      return p;
+    }
+    return 0;
+  };
+
+  const basePrice = form.space === 'Virtual Office' 
+    ? getVirtualOfficePrice()
+    : ((form.space && effectiveDuration && PRICING[form.space]) ? (PRICING[form.space][effectiveDuration] || 0) : 0);
   const addonsTotal = selectedAddons.reduce((sum, id) => { const a = ADDONS.find(x => x.id === id); return sum + (a ? a.price : 0); }, 0);
   const totalAmount = basePrice + addonsTotal;
   const gst = Math.round(totalAmount * 0.18);
   const grandTotal = totalAmount + gst;
 
   function toggleAddon(id) { setSelectedAddons(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]); }
-  function updateCard(k, v) { setCardDetails(c => ({ ...c, [k]: v })); }
   function update(k, v) { setForm(f => ({ ...f, [k]: v })); }
 
   function canNext() {
     if (isEnquiry) return form.name && form.email && form.phone && form.company;
-    // When plan is preselected from Spaces page, duration is already auto-filled
-    if (step === 1) return form.space && form.location && (form.duration || !!preselectedPlan);
+    if (step === 1) return form.space && form.location && (effectiveDuration || !!preselectedPlan);
     if (step === 2) return form.date;
     if (step === 3) return form.name && form.email && form.phone && form.company;
     if (step === 4) return true;
-    if (step === 5) {
-      if (paymentMethod === 'card') return cardDetails.number.replace(/\s/g, '').length >= 16 && cardDetails.expiry && cardDetails.cvv.length >= 3 && cardDetails.holder;
-      if (paymentMethod === 'upi') return upiId.includes('@');
-      return true;
-    }
     return true;
   }
 
@@ -156,7 +202,7 @@ export default function BookingPage({ onNavigate, preselectedPlan = '' }) {
       type: isEnquiry ? 'Enquiry' : 'Booking',
       message: isEnquiry ? 'Enquiry form submitted' : 'Booking form submitted'
     };
-    if (!isEnquiry) { Object.assign(payload, { space: form.space, location: form.location, duration: form.duration, startDate: dateStr, addons: selectedAddons.length ? selectedAddons.map(id => ADDONS.find(a => a.id === id)?.label).join(', ') : 'None', customFeatures: form.customFeatures?.length ? form.customFeatures.join(', ') : 'None' }); }
+    if (!isEnquiry) { Object.assign(payload, { space: form.space, location: form.location, duration: effectiveDuration, startDate: dateStr, addons: selectedAddons.length ? selectedAddons.map(id => ADDONS.find(a => a.id === id)?.label).join(', ') : 'None', customFeatures: form.customFeatures?.length ? form.customFeatures.join(', ') : 'None' }); }
     try {
       const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
       const endpoint = isEnquiry ? `${baseUrl}/api/contact` : `${baseUrl}/api/booking`;
@@ -169,14 +215,14 @@ export default function BookingPage({ onNavigate, preselectedPlan = '' }) {
           setTimeout(() => setShowToast(false), 5000);
         }
       } else alert('Something went wrong!');
-    } catch (e) { console.error(e); alert('Failed to send. Check connection.'); }
+    } catch (err) { console.error(err); alert('Failed to send. Check connection.'); }
     finally { setIsSubmitting(false); }
   };
 
   function reset() {
     setDone(false); setStep(1); setShowDownloadToast(false);
     setForm({ space: '', location: '', duration: '', date: null, name: '', email: '', phone: '', company: '' });
-    setSelectedAddons([]); setPaymentMethod('card'); setCardDetails({ number: '', expiry: '', cvv: '', holder: '' }); setUpiId('');
+    setSelectedAddons([]); setVoAddons([]); setVoPlan('basic'); setVoRegistration('opc');
   }
 
   function downloadInvoice() {
@@ -255,7 +301,7 @@ export default function BookingPage({ onNavigate, preselectedPlan = '' }) {
       <h3>Booking Details</h3>
       <p><strong>Space:</strong> ${form.space}</p>
       <p><strong>Location:</strong> Mows ${form.location}</p>
-      <p><strong>Duration:</strong> ${form.duration}</p>
+      <p><strong>Duration:</strong> ${effectiveDuration}</p>
       <p><strong>Start date:</strong> ${startDate}</p>
     </div>
   </div>
@@ -264,7 +310,7 @@ export default function BookingPage({ onNavigate, preselectedPlan = '' }) {
     <table>
       <thead><tr><th>Description</th><th style="text-align:right">Amount</th></tr></thead>
       <tbody>
-        <tr><td>${form.space} — ${form.duration} at Mows ${form.location}</td><td style="text-align:right">${fmt(basePrice)}</td></tr>
+        <tr><td>${form.space} — ${effectiveDuration} at Mows ${form.location}</td><td style="text-align:right">${fmt(basePrice)}</td></tr>
         ${addonsRows}
         <tr class="gst-row"><td>GST (18%)</td><td style="text-align:right">${fmt(gst)}</td></tr>
         <tr class="total-row"><td>Total Paid</td><td style="text-align:right">${fmt(grandTotal)}</td></tr>
@@ -306,7 +352,7 @@ export default function BookingPage({ onNavigate, preselectedPlan = '' }) {
         </p>
         {!isEnquiry && (
           <div style={{ borderRadius: 8, padding: '1.5rem', textAlign: 'left', marginBottom: 20, background: '#fcfaf5', border: '3px solid #13221C' }}>
-            {[['Space', form.space], ['Location', 'Mows ' + form.location], ['Duration', form.duration], ['Start date', form.date?.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })], selectedAddons.length > 0 && ['Add-ons', selectedAddons.map(id => ADDONS.find(a => a.id === id)?.label).join(', ')]].filter(Boolean).map(([k, v], idx, arr) => (
+            {[['Space', form.space], ['Location', 'Mows ' + form.location], ['Duration', effectiveDuration], ['Start date', form.date?.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })], selectedAddons.length > 0 && ['Add-ons', selectedAddons.map(id => ADDONS.find(a => a.id === id)?.label).join(', ')]].filter(Boolean).map(([k, v], idx, arr) => (
               <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: idx !== arr.length - 1 ? '2px dashed rgba(19,34,28,0.2)' : 'none' }}>
                 <span style={{ fontSize: 13, color: textDark, fontWeight: 800, textTransform: 'uppercase' }}>{k}</span>
                 <span style={{ fontSize: 13, fontWeight: 900, color: textDark }}>{v}</span>
@@ -315,14 +361,15 @@ export default function BookingPage({ onNavigate, preselectedPlan = '' }) {
           </div>
         )}
         <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-          {/* {!isEnquiry && (
+          {!isEnquiry && (
             <button onClick={downloadInvoice} style={{ background: '#174F50', color: '#fff', border: '3px solid #13221C', borderRadius: 8, padding: '14px 24px', fontSize: 14, fontWeight: 900, cursor: 'pointer', textTransform: 'uppercase', boxShadow: '4px 4px 0px #13221C', display: 'flex', alignItems: 'center', gap: 8, transition: 'all 0.2s' }}
               onMouseEnter={e => { e.currentTarget.style.transform = 'translate(-2px,-2px)'; e.currentTarget.style.boxShadow = '6px 6px 0px #13221C'; }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '4px 4px 0px #13221C'; }}>
               <Download size={16} strokeWidth={2.5} /> Download Invoice
             </button>
-          )} */}
+          )}
 
+          <button onClick={reset} style={{ background: yellow, color: textDark, border: '3px solid #13221C', borderRadius: 8, padding: '14px 24px', fontSize: 14, fontWeight: 900, cursor: 'pointer', textTransform: 'uppercase', boxShadow: '4px 4px 0px #13221C' }}>Book Another Space</button>
           <button onClick={() => onNavigate('home')} style={{ background: '#fff', color: textDark, border: '3px solid #13221C', borderRadius: 8, padding: '14px 28px', fontSize: 14, fontWeight: 900, cursor: 'pointer', textTransform: 'uppercase', boxShadow: '4px 4px 0px #13221C' }}>Back to home</button>
         </div>
       </div>
@@ -434,11 +481,15 @@ export default function BookingPage({ onNavigate, preselectedPlan = '' }) {
             <div>
               <p style={{ fontSize: 18, fontWeight: 900, margin: '0 0 1rem', color: textDark, textTransform: 'uppercase' }}>What type of space?</p>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 16, marginBottom: '2.5rem' }}>
-                {spaceTypes.map(s => (
-                  <button key={s} onClick={() => { update('space', s); update('duration', ''); }} style={{ background: form.space === s ? '#174F50' : '#fff', border: '3px solid #13221C', borderRadius: 8, padding: '16px', fontSize: 14, fontWeight: 900, color: form.space === s ? '#fff' : textDark, cursor: 'pointer', transition: 'all 0.15s', textAlign: 'left', textTransform: 'uppercase', boxShadow: form.space === s ? '4px 4px 0px #13221C' : '4px 4px 0px rgba(19,34,28,0.1)' }}>
-                    {s}
-                  </button>
-                ))}
+                {spaceTypes.map(s => {
+                  const unavail = s === 'Private Cabin';
+                  return (
+                    <button key={s} onClick={() => { if (!unavail) { update('space', s); update('duration', ''); } }} style={{ position: 'relative', background: unavail ? '#f3f4f6' : (form.space === s ? '#174F50' : '#fff'), border: '3px solid #13221C', borderRadius: 8, padding: '16px', fontSize: 14, fontWeight: 900, color: unavail ? '#9ca3af' : (form.space === s ? '#fff' : textDark), cursor: unavail ? 'not-allowed' : 'pointer', transition: 'all 0.15s', textAlign: 'left', textTransform: 'uppercase', boxShadow: unavail ? 'none' : (form.space === s ? '4px 4px 0px #13221C' : '4px 4px 0px rgba(19,34,28,0.1)') }}>
+                      {s}
+                      {unavail && <div style={{ position: 'absolute', top: -12, right: 12, background: '#13221C', color: '#fde047', fontSize: 10, padding: '4px 8px', borderRadius: 4, letterSpacing: '0.05em', whiteSpace: 'nowrap', border: '2px solid #13221C' }}>NOT AVAILABLE</div>}
+                    </button>
+                  );
+                })}
               </div>
               <p style={{ fontSize: 18, fontWeight: 900, margin: '0 0 1rem', color: textDark, textTransform: 'uppercase' }}>Which location?</p>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 16, marginBottom: '2.5rem' }}>
@@ -450,10 +501,180 @@ export default function BookingPage({ onNavigate, preselectedPlan = '' }) {
                   </button>);
                 })}
               </div>
-              <p style={{ fontSize: 18, fontWeight: 900, margin: '0 0 1rem', color: textDark, textTransform: 'uppercase' }}>How long?</p>
-              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                {(DURATIONS_MAP[form.space] || []).map(d => <button key={d} onClick={() => update('duration', d)} style={{ background: form.duration === d ? '#174F50' : '#fff', border: '3px solid #13221C', borderRadius: 100, padding: '10px 20px', fontSize: 14, color: form.duration === d ? '#fff' : textDark, cursor: 'pointer', fontWeight: 900, transition: 'all 0.15s', textTransform: 'uppercase', boxShadow: form.duration === d ? '4px 4px 0px #13221C' : '2px 2px 0px rgba(19,34,28,0.1)' }}>{d}</button>)}
-              </div>
+              {form.space === 'Virtual Office' ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 20, marginTop: '1.5rem' }}>
+                  <p style={{ fontSize: 18, fontWeight: 900, margin: 0, color: textDark, textTransform: 'uppercase' }}>Select Virtual Office Plan & Services</p>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+                    {/* 1. Office Basic */}
+                    <div 
+                      onClick={() => setVoPlan('basic')}
+                      style={{
+                        border: `3px solid ${voPlan === 'basic' ? '#174F50' : '#13221C'}`,
+                        borderRadius: 12, padding: '18px 20px', cursor: 'pointer',
+                        background: voPlan === 'basic' ? '#f0fdf4' : '#fff',
+                        boxShadow: voPlan === 'basic' ? '4px 4px 0px #174F50' : '3px 3px 0px rgba(19,34,28,0.1)',
+                        transition: 'all 0.15s'
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                        <span style={{ fontSize: 16, fontWeight: 900, color: textDark, textTransform: 'uppercase' }}>Office Basic</span>
+                        <span style={{ fontSize: 15, fontWeight: 900, color: '#174F50' }}>₹14,400 + GST</span>
+                      </div>
+                      <div style={{ fontSize: 12, fontWeight: 800, color: '#174F50', marginBottom: 10, textTransform: 'uppercase' }}>
+                        👤 Proprietorship / Single Owner (₹1,200/mo billed annually)
+                      </div>
+                      <ul style={{ margin: '0 0 10px 18px', padding: 0, fontSize: 13, fontWeight: 700, color: textDark, lineHeight: 1.6 }}>
+                        <li>11 Months Rental Agreement</li>
+                        <li>GST & NOC Support</li>
+                        <li>Email Handling Support</li>
+                        <li>Bank Account Opening Support</li>
+                      </ul>
+
+                      {voPlan === 'basic' && (
+                        <div style={{ marginTop: 14, paddingTop: 14, borderTop: '2px dashed #13221C' }}>
+                          <p style={{ fontSize: 12, fontWeight: 900, textTransform: 'uppercase', marginBottom: 8, color: textDark }}>Do you need CA service? </p>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                            {[
+                              { id: 'drafting', label: 'Drafting Service', price: 500 },
+                              { id: 'gst_msme', label: 'GST + MSME Registration', price: 2000 }
+                            ].map(opt => {
+                              const checked = voAddons.includes(opt.id);
+                              return (
+                                <label key={opt.id} onClick={e => e.stopPropagation()} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, fontWeight: 800, cursor: 'pointer', color: textDark }}>
+                                  <input 
+                                    type="checkbox" 
+                                    checked={checked} 
+                                    onChange={() => toggleVoAddon(opt.id)}
+                                    style={{ width: 18, height: 18, accentColor: '#174F50' }}
+                                  />
+                                  {opt.label} ( ₹{opt.price.toLocaleString('en-IN')} + GST)
+                                </label>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* 2. Office Pro */}
+                    <div 
+                      onClick={() => setVoPlan('pro')}
+                      style={{
+                        border: `3px solid ${voPlan === 'pro' ? '#174F50' : '#13221C'}`,
+                        borderRadius: 12, padding: '18px 20px', cursor: 'pointer',
+                        background: voPlan === 'pro' ? '#f0fdf4' : '#fff',
+                        boxShadow: voPlan === 'pro' ? '4px 4px 0px #174F50' : '3px 3px 0px rgba(19,34,28,0.1)',
+                        transition: 'all 0.15s'
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                        <span style={{ fontSize: 16, fontWeight: 900, color: textDark, textTransform: 'uppercase' }}>Office Pro</span>
+                        <span style={{ fontSize: 15, fontWeight: 900, color: '#174F50' }}>₹18,000 + GST</span>
+                      </div>
+                      <div style={{ fontSize: 12, fontWeight: 800, color: '#174F50', marginBottom: 10, textTransform: 'uppercase' }}>
+                        🏢 Partnership, LLP, Pvt Ltd, OPC (₹1,500/mo billed annually)
+                      </div>
+                      <ul style={{ margin: '0 0 10px 18px', padding: 0, fontSize: 13, fontWeight: 700, color: textDark, lineHeight: 1.6 }}>
+                        <li>11 Months Rental Agreement</li>
+                        <li>GST & NOC Support</li>
+                        <li>Email Handling Support</li>
+                        <li>Bank Account Opening Support</li>
+                      </ul>
+
+                      {voPlan === 'pro' && (
+                        <div style={{ marginTop: 14, paddingTop: 14, borderTop: '2px dashed #13221C' }}>
+                          <p style={{ fontSize: 12, fontWeight: 900, textTransform: 'uppercase', marginBottom: 8, color: textDark }}>Do you need CA service? </p>
+                          <label onClick={e => e.stopPropagation()} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, fontWeight: 800, cursor: 'pointer', color: textDark }}>
+                            <input 
+                              type="checkbox" 
+                              checked={voAddons.includes('llp_reg')} 
+                              onChange={() => toggleVoAddon('llp_reg')}
+                              style={{ width: 18, height: 18, accentColor: '#174F50' }}
+                            />
+                            LLP Registration ( ₹13,500 + GST)
+                          </label>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* 3. Company Registration Services */}
+                    <div 
+                      onClick={() => setVoPlan('reg')}
+                      style={{
+                        border: `3px solid ${voPlan === 'reg' ? '#174F50' : '#13221C'}`,
+                        borderRadius: 12, padding: '18px 20px', cursor: 'pointer',
+                        background: voPlan === 'reg' ? '#f0fdf4' : '#fff',
+                        boxShadow: voPlan === 'reg' ? '4px 4px 0px #174F50' : '3px 3px 0px rgba(19,34,28,0.1)',
+                        transition: 'all 0.15s'
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                        <span style={{ fontSize: 16, fontWeight: 900, color: textDark, textTransform: 'uppercase' }}>Company Registration Services</span>
+                        <span style={{ fontSize: 13, fontWeight: 900, color: '#174F50' }}>Select Entity</span>
+                      </div>
+                      <p style={{ fontSize: 12, fontWeight: 700, color: textLight, margin: '0 0 10px' }}>Standalone registration services for new business entities</p>
+
+                      {voPlan === 'reg' && (
+                        <div style={{ marginTop: 14, paddingTop: 14, borderTop: '2px dashed #13221C' }} onClick={e => e.stopPropagation()}>
+                          <p style={{ fontSize: 12, fontWeight: 900, textTransform: 'uppercase', marginBottom: 10, color: textDark }}>Select Entity Registration:</p>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                            {[
+                              { id: 'opc', title: 'OPC Registration', price: 13500, desc: 'Name app (1 free), DSC for min. 1 person' },
+                              { id: 'pvtltd', title: 'Pvt Ltd Registration', price: 16950, desc: 'Name app (1 time), DSC for min. 2 persons' },
+                              { id: 'partnership', title: 'Partnership', price: 9322, desc: 'Includes Deed, Stamp Paper, PAN Card' }
+                            ].map(item => (
+                              <div 
+                                key={item.id} 
+                                onClick={() => setVoRegistration(item.id)}
+                                style={{
+                                  padding: 12, borderRadius: 8, border: `2px solid ${voRegistration === item.id ? '#174F50' : '#13221C'}`,
+                                  background: voRegistration === item.id ? yellow : '#fff', cursor: 'pointer'
+                                }}
+                              >
+                                <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 900, fontSize: 14, color: textDark }}>
+                                  <span>{item.title}</span>
+                                  <span>₹{item.price.toLocaleString('en-IN')} + GST</span>
+                                </div>
+                                <div style={{ fontSize: 12, fontWeight: 700, color: textDark, marginTop: 4 }}>{item.desc}</div>
+                              </div>
+                            ))}
+                          </div>
+
+                          <div style={{ marginTop: 14, paddingTop: 12, borderTop: '1px solid rgba(19,34,28,0.15)' }}>
+                            <p style={{ fontSize: 12, fontWeight: 900, textTransform: 'uppercase', marginBottom: 8, color: textDark }}>Next Step Service:</p>
+                            <label style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, fontWeight: 800, cursor: 'pointer', color: textDark }}>
+                              <input 
+                                type="checkbox" 
+                                checked={voAddons.includes('gst_msme_reg')} 
+                                onChange={() => toggleVoAddon('gst_msme_reg')}
+                                style={{ width: 18, height: 18, accentColor: '#174F50' }}
+                              />
+                              Include GST + MSME Registration ( ₹2,000 + GST)
+                            </label>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <p style={{ fontSize: 18, fontWeight: 900, margin: '0 0 1rem', color: textDark, textTransform: 'uppercase' }}>How long?</p>
+                  <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                    {(DURATIONS_MAP[form.space] || []).map(d => {
+                      const is1YearFree = d === '1 year' && (form.space === 'Hot Desk' || form.space === 'Dedicated Desk');
+                      return (
+                        <button key={d} onClick={() => update('duration', d)} style={{ background: form.duration === d ? '#174F50' : '#fff', border: '3px solid #13221C', borderRadius: 100, padding: '10px 20px', fontSize: 14, color: form.duration === d ? '#fff' : textDark, cursor: 'pointer', fontWeight: 900, transition: 'all 0.15s', textTransform: 'uppercase', boxShadow: form.duration === d ? '4px 4px 0px #13221C' : '2px 2px 0px rgba(19,34,28,0.1)' }}>
+                          {d}{is1YearFree ? ' (2 mos free)' : ''}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
             </div>
 
           ) : step === 2 ? (
