@@ -115,6 +115,95 @@ app.post('/api/booking', async (req, res) => {
   }
 });
 
+const { Cashfree, CFEnvironment } = require('cashfree-pg');
+
+// Cashfree SDK Setup 
+const clientId = process.env.CASHFREE_CLIENT_ID || process.env.CASHFREE_APP_ID;
+const clientSecret = process.env.CASHFREE_CLIENT_SECRET || process.env.CASHFREE_SECRET_KEY;
+const cfEnvironment = process.env.CASHFREE_ENV === 'PRODUCTION' ? CFEnvironment.PRODUCTION : CFEnvironment.SANDBOX;
+
+let cashfree = null;
+if (clientId && clientSecret) {
+  cashfree = new Cashfree(cfEnvironment, clientId, clientSecret);
+}
+
+app.post('/api/create-cashfree-order', async (req, res) => {
+  if (!cashfree) {
+    return res.status(500).json({ success: false, message: 'Cashfree credentials not configured in backend .env' });
+  }
+
+  const { name, email, phone, space, location, duration, amount } = req.body;
+  const orderId = `ORDER_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+
+  const orderPayload = {
+    order_id: orderId,
+    order_amount: parseFloat(amount),
+    order_currency: 'INR',
+    customer_details: {
+      customer_id: email.replace(/[^a-zA-Z0-9]/g, '_'),
+      customer_name: name,
+      customer_email: email,
+      customer_phone: phone,
+    },
+    order_meta: {
+      return_url: process.env.CASHFREE_ENV === 'PRODUCTION'
+        ? `${(process.env.FRONTEND_URL || 'https://mowshub.com').replace(/^http:\/\//, 'https://')}/booking?order_id={order_id}`
+        : `${process.env.FRONTEND_URL || 'http://localhost:5173'}/booking?order_id={order_id}`,
+    },
+    order_note: `Booking ${space} at ${location} (${duration})`,
+  };
+
+  try {
+    const response = await cashfree.PGCreateOrder(orderPayload);
+    res.json({
+      success: true,
+      orderId: response.data.order_id,
+      paymentSessionId: response.data.payment_session_id,
+    });
+  } catch (error) {
+    console.error('Cashfree Order Creation Error:', error.response?.data || error.message);
+    res.status(500).json({ success: false, message: 'Failed to create payment session', error: error.response?.data || error.message });
+  }
+});
+
+app.get('/api/verify-payment/:orderId', async (req, res) => {
+  if (!cashfree) {
+    return res.status(500).json({ success: false, message: 'Cashfree credentials not configured in backend .env' });
+  }
+
+  const { orderId } = req.params;
+
+  try {
+    const response = await cashfree.PGFetchOrder(orderId);
+    if (response.data.order_status === 'PAID') {
+      res.json({ success: true, status: 'PAID', order: response.data });
+    } else {
+      res.json({ success: false, status: response.data.order_status });
+    }
+  } catch (error) {
+    console.error('Payment Verification Error:', error.response?.data || error.message);
+    res.status(500).json({ success: false, message: 'Verification error' });
+  }
+});
+
+app.post('/api/cashfree-webhook', async (req, res) => {
+  try {
+    console.log('Received Cashfree Webhook:', JSON.stringify(req.body, null, 2));
+    const { type, data } = req.body || {};
+
+    if (type === 'PAYMENT_SUCCESS_WEBHOOK') {
+      const orderId = data?.order?.order_id;
+      const paymentAmount = data?.payment?.payment_amount;
+      console.log(`✅ Payment SUCCESS for Order ${orderId}, Amount: ₹${paymentAmount}`);
+    }
+
+    res.status(200).json({ status: 'OK', message: 'Webhook received successfully' });
+  } catch (err) {
+    console.error('Webhook Processing Error:', err);
+    res.status(500).json({ status: 'ERROR', message: err.message });
+  }
+});
+
 // Start Server
 app.listen(port, () => {
   console.log(`Backend server running on http://localhost:${port}`);
