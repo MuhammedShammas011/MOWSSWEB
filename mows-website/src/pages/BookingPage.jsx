@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useSEO from '../hooks/useSEO';
 import { Lock, Printer, Target, Car, Coffee, Mail, CheckCircle2, Download, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { load } from '@cashfreepayments/cashfree-js';
 import logoIconImg from '../assets/Logo MOWS Secondary Colors-06 1.png';
 
 const textDark = '#13221C';
@@ -194,29 +195,84 @@ export default function BookingPage({ onNavigate, preselectedPlan = '' }) {
     return true;
   }
 
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get('order_id');
+    if (orderId) {
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      fetch(`${baseUrl}/api/verify-payment/${orderId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.status === 'PAID') {
+            setDone(true);
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 5000);
+          } else {
+            alert('Payment was not completed or was cancelled.');
+          }
+        })
+        .catch(err => console.error('Verification error:', err));
+    }
+  }, []);
+
   const submitBooking = async () => {
     setIsSubmitting(true);
-    const dateStr = form.date ? form.date.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : 'N/A';
-    const payload = {
-      name: form.name, email: form.email, phone: form.phone, company: form.company || 'N/A',
-      type: isEnquiry ? 'Enquiry' : 'Booking',
-      message: isEnquiry ? 'Enquiry form submitted' : 'Booking form submitted'
-    };
-    if (!isEnquiry) { Object.assign(payload, { space: form.space, location: form.location, duration: effectiveDuration, startDate: dateStr, addons: selectedAddons.length ? selectedAddons.map(id => ADDONS.find(a => a.id === id)?.label).join(', ') : 'None', customFeatures: form.customFeatures?.length ? form.customFeatures.join(', ') : 'None' }); }
+    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+    if (isEnquiry) {
+      const payload = {
+        name: form.name, email: form.email, phone: form.phone, company: form.company || 'N/A',
+        type: 'Enquiry', message: 'Enquiry form submitted'
+      };
+      try {
+        const r = await fetch(`${baseUrl}/api/contact`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const res = await r.json();
+        if (res.success) setDone(true);
+        else alert('Failed to submit enquiry.');
+      } catch (err) {
+        console.error(err);
+        alert('Network error.');
+      } finally {
+        setIsSubmitting(false);
+      }
+      return;
+    }
+
     try {
-      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-      const endpoint = isEnquiry ? `${baseUrl}/api/contact` : `${baseUrl}/api/booking`;
-      const r = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(payload) });
+      const r = await fetch(`${baseUrl}/api/create-cashfree-order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          space: form.space,
+          location: form.location,
+          duration: effectiveDuration,
+          amount: grandTotal,
+        }),
+      });
+
       const res = await r.json();
-      if (res.success) {
-        setDone(true);
-        if (!isEnquiry) {
-          setShowToast(true);
-          setTimeout(() => setShowToast(false), 5000);
-        }
-      } else alert('Something went wrong!');
-    } catch (err) { console.error(err); alert('Failed to send. Check connection.'); }
-    finally { setIsSubmitting(false); }
+
+      if (!res.success || !res.paymentSessionId) {
+        alert(res.message || 'Could not launch payment gateway.');
+        setIsSubmitting(false);
+        return;
+      }
+
+      const mode = import.meta.env.VITE_CASHFREE_MODE || 'sandbox';
+      const cashfree = await load({ mode });
+      await cashfree.checkout({
+        paymentSessionId: res.paymentSessionId,
+        redirectTarget: '_self',
+      });
+    } catch (err) {
+      console.error(err);
+      alert('Error launching payment gateway.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   function reset() {
