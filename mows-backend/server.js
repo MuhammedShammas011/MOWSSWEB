@@ -12,27 +12,31 @@ app.use(express.json());
 
 // Nodemailer Transporter Setup
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || 'smtp.gmail.com',
-  port: process.env.SMTP_PORT || 587,
+  host:  'smtp.gmail.com',
+  port: 587,
   secure: false, // true for 465, false for other ports
   auth: {
-    user: process.env.SMTP_USER, 
-    pass: process.env.SMTP_PASS, 
+    user: "mowshub@gmail.com", 
+    pass: "qhmjoghvsyawcdtk", 
   },
 });
 
 // Verify connection configuration
 transporter.verify(function (error, success) {
   if (error) {
-    console.log('SMTP Connection Error:', error);
+    console.log('SMTP Connection Error:', error.message);
   } else {
     console.log('Server is ready to take our messages');
   }
 });
 
+app.get('/', (req, res) => {
+  res.send({ status: 'OK', message: 'Mows Backend API is running successfully' });
+});
+
 // Endpoint: Contact Form Submission
 app.post('/api/contact', async (req, res) => {
-  const { name, email, phone, company, message } = req.body;
+  const { name, email, phone, company, preferredLocation, isFranchise, message } = req.body;
 
   const mailOptions = {
     from: `"Mows Website" <${process.env.SMTP_USER}>`,
@@ -42,16 +46,20 @@ app.post('/api/contact', async (req, res) => {
       Name: ${name}
       Email: ${email}
       Phone: ${phone}
-      Company: ${company}
-      Message: ${message}
+      Company: ${company || 'N/A'}
+      Preferred Location: ${preferredLocation || 'N/A'}
+      Interested in Franchise: ${isFranchise || 'No'}
+      Message: ${message || 'N/A'}
     `,
     html: `
       <h2>New Contact Request</h2>
       <p><strong>Name:</strong> ${name}</p>
       <p><strong>Email:</strong> ${email}</p>
       <p><strong>Phone:</strong> ${phone}</p>
-      <p><strong>Company:</strong> ${company}</p>
-      <p><strong>Message:</strong> ${message}</p>
+      <p><strong>Company:</strong> ${company || 'N/A'}</p>
+      <p><strong>Preferred Location:</strong> ${preferredLocation || 'N/A'}</p>
+      <p><strong>Interested in Franchise:</strong> ${isFranchise || 'No'}</p>
+      <p><strong>Message:</strong> ${message || 'N/A'}</p>
     `,
   };
 
@@ -61,7 +69,7 @@ app.post('/api/contact', async (req, res) => {
     res.status(200).json({ success: true, message: 'Message sent successfully!' });
   } catch (error) {
     console.error('Error sending email:', error);
-    res.status(500).json({ success: false, message: 'Failed to send message.' });
+    res.status(500).json({ success: false, message: 'Failed to send message.', error: error.message });
   }
 });
 
@@ -103,7 +111,96 @@ app.post('/api/booking', async (req, res) => {
     res.status(200).json({ success: true, message: 'Booking request sent successfully!' });
   } catch (error) {
     console.error('Error sending booking email:', error);
-    res.status(500).json({ success: false, message: 'Failed to send booking request.' });
+    res.status(500).json({ success: false, message: 'Failed to send booking request.', error: error.message });
+  }
+});
+
+const { Cashfree, CFEnvironment } = require('cashfree-pg');
+
+// Cashfree SDK Setup 
+const clientId = process.env.CASHFREE_CLIENT_ID || process.env.CASHFREE_APP_ID;
+const clientSecret = process.env.CASHFREE_CLIENT_SECRET || process.env.CASHFREE_SECRET_KEY;
+const cfEnvironment = process.env.CASHFREE_ENV === 'PRODUCTION' ? CFEnvironment.PRODUCTION : CFEnvironment.SANDBOX;
+
+let cashfree = null;
+if (clientId && clientSecret) {
+  cashfree = new Cashfree(cfEnvironment, clientId, clientSecret);
+}
+
+app.post('/api/create-cashfree-order', async (req, res) => {
+  if (!cashfree) {
+    return res.status(500).json({ success: false, message: 'Cashfree credentials not configured in backend .env' });
+  }
+
+  const { name, email, phone, space, location, duration, amount } = req.body;
+  const orderId = `ORDER_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+
+  const orderPayload = {
+    order_id: orderId,
+    order_amount: parseFloat(amount),
+    order_currency: 'INR',
+    customer_details: {
+      customer_id: email.replace(/[^a-zA-Z0-9]/g, '_'),
+      customer_name: name,
+      customer_email: email,
+      customer_phone: phone,
+    },
+    order_meta: {
+      return_url: process.env.CASHFREE_ENV === 'PRODUCTION'
+        ? `${(process.env.FRONTEND_URL || 'https://mowshub.com').replace(/^http:\/\//, 'https://')}/booking?order_id={order_id}`
+        : `${process.env.FRONTEND_URL || 'http://localhost:5173'}/booking?order_id={order_id}`,
+    },
+    order_note: `Booking ${space} at ${location} (${duration})`,
+  };
+
+  try {
+    const response = await cashfree.PGCreateOrder(orderPayload);
+    res.json({
+      success: true,
+      orderId: response.data.order_id,
+      paymentSessionId: response.data.payment_session_id,
+    });
+  } catch (error) {
+    console.error('Cashfree Order Creation Error:', error.response?.data || error.message);
+    res.status(500).json({ success: false, message: 'Failed to create payment session', error: error.response?.data || error.message });
+  }
+});
+
+app.get('/api/verify-payment/:orderId', async (req, res) => {
+  if (!cashfree) {
+    return res.status(500).json({ success: false, message: 'Cashfree credentials not configured in backend .env' });
+  }
+
+  const { orderId } = req.params;
+
+  try {
+    const response = await cashfree.PGFetchOrder(orderId);
+    if (response.data.order_status === 'PAID') {
+      res.json({ success: true, status: 'PAID', order: response.data });
+    } else {
+      res.json({ success: false, status: response.data.order_status });
+    }
+  } catch (error) {
+    console.error('Payment Verification Error:', error.response?.data || error.message);
+    res.status(500).json({ success: false, message: 'Verification error' });
+  }
+});
+
+app.post('/api/cashfree-webhook', async (req, res) => {
+  try {
+    console.log('Received Cashfree Webhook:', JSON.stringify(req.body, null, 2));
+    const { type, data } = req.body || {};
+
+    if (type === 'PAYMENT_SUCCESS_WEBHOOK') {
+      const orderId = data?.order?.order_id;
+      const paymentAmount = data?.payment?.payment_amount;
+      console.log(`✅ Payment SUCCESS for Order ${orderId}, Amount: ₹${paymentAmount}`);
+    }
+
+    res.status(200).json({ status: 'OK', message: 'Webhook received successfully' });
+  } catch (err) {
+    console.error('Webhook Processing Error:', err);
+    res.status(500).json({ status: 'ERROR', message: err.message });
   }
 });
 
