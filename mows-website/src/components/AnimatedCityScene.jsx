@@ -4,25 +4,25 @@ import { motion } from 'framer-motion';
 const SedanSVG = ({ color }) => (
   <svg viewBox="0 0 120 50" style={{ width: '100%', height: '100%', display: 'block' }}>
     {/* Body outline */}
-    <path 
-      d="M15 30 L25 30 C 30 18, 48 13, 58 13 L82 13 C 92 13, 98 18, 102 26 L112 26 C 117 26, 119 29, 119 32 L119 40 C 119 41, 118 42, 117 42 L3 42 C 2 42, 1 41, 1 40 L1 32 C 1 29, 3 29, 5 29 Z" 
-      fill={color} 
-      stroke="#13221C" 
-      strokeWidth="2.5" 
+    <path
+      d="M15 30 L25 30 C 30 18, 48 13, 58 13 L82 13 C 92 13, 98 18, 102 26 L112 26 C 117 26, 119 29, 119 32 L119 40 C 119 41, 118 42, 117 42 L3 42 C 2 42, 1 41, 1 40 L1 32 C 1 29, 3 29, 5 29 Z"
+      fill={color}
+      stroke="#13221C"
+      strokeWidth="2.5"
       strokeLinejoin="round"
     />
     {/* Windows */}
-    <path 
-      d="M30 28 L36 19 L54 18 L54 28 Z" 
-      fill="#bfdbfe" 
-      stroke="#13221C" 
-      strokeWidth="2" 
+    <path
+      d="M30 28 L36 19 L54 18 L54 28 Z"
+      fill="#bfdbfe"
+      stroke="#13221C"
+      strokeWidth="2"
     />
-    <path 
-      d="M58 28 L58 18 L78 18 L83 28 Z" 
-      fill="#bfdbfe" 
-      stroke="#13221C" 
-      strokeWidth="2" 
+    <path
+      d="M58 28 L58 18 L78 18 L83 28 Z"
+      fill="#bfdbfe"
+      stroke="#13221C"
+      strokeWidth="2"
     />
     {/* Door lines */}
     <line x1="56" y1="18" x2="56" y2="42" stroke="#13221C" strokeWidth="2" />
@@ -43,25 +43,25 @@ const SedanSVG = ({ color }) => (
 const HatchbackSVG = ({ color }) => (
   <svg viewBox="0 0 110 50" style={{ width: '100%', height: '100%', display: 'block' }}>
     {/* Body outline */}
-    <path 
-      d="M5 31 L18 31 C 22 16, 40 14, 68 14 C 75 14, 85 22, 90 27 L102 27 C 106 27, 108 29, 108 32 L108 40 C 108 41, 107 42, 106 42 L4 42 C 3 42, 2 41, 2 40 L2 34 C 2 32, 3 32, 5 31 Z" 
-      fill={color} 
-      stroke="#13221C" 
-      strokeWidth="2.5" 
+    <path
+      d="M5 31 L18 31 C 22 16, 40 14, 68 14 C 75 14, 85 22, 90 27 L102 27 C 106 27, 108 29, 108 32 L108 40 C 108 41, 107 42, 106 42 L4 42 C 3 42, 2 41, 2 40 L2 34 C 2 32, 3 32, 5 31 Z"
+      fill={color}
+      stroke="#13221C"
+      strokeWidth="2.5"
       strokeLinejoin="round"
     />
     {/* Windows */}
-    <path 
-      d="M24 28 L30 19 L56 18 L56 28 Z" 
-      fill="#bfdbfe" 
-      stroke="#13221C" 
-      strokeWidth="2" 
+    <path
+      d="M24 28 L30 19 L56 18 L56 28 Z"
+      fill="#bfdbfe"
+      stroke="#13221C"
+      strokeWidth="2"
     />
-    <path 
-      d="M60 28 L60 18 L76 19 L81 28 Z" 
-      fill="#bfdbfe" 
-      stroke="#13221C" 
-      strokeWidth="2" 
+    <path
+      d="M60 28 L60 18 L76 19 L81 28 Z"
+      fill="#bfdbfe"
+      stroke="#13221C"
+      strokeWidth="2"
     />
     {/* Door lines */}
     <line x1="58" y1="18" x2="58" y2="42" stroke="#13221C" strokeWidth="2" />
@@ -84,31 +84,31 @@ const SuvSVG = ({ color }) => (
     {/* Roof rack */}
     <rect x="35" y="4" width="45" height="3" fill="#13221C" rx="1.5" />
     {/* Main body */}
-    <path 
-      d="M5 31 L15 31 C 18 13, 32 8, 80 8 C 88 8, 94 13, 98 23 L112 23 C 117 23, 119 26, 119 30 L119 44 C 119 45, 118 46, 117 46 L3 46 C 2 46, 1 45, 1 44 L1 34 C 1 32, 3 32, 5 31 Z" 
-      fill={color} 
-      stroke="#13221C" 
-      strokeWidth="2.5" 
+    <path
+      d="M5 31 L15 31 C 18 13, 32 8, 80 8 C 88 8, 94 13, 98 23 L112 23 C 117 23, 119 26, 119 30 L119 44 C 119 45, 118 46, 117 46 L3 46 C 2 46, 1 45, 1 44 L1 34 C 1 32, 3 32, 5 31 Z"
+      fill={color}
+      stroke="#13221C"
+      strokeWidth="2.5"
       strokeLinejoin="round"
     />
     {/* Windows */}
-    <path 
-      d="M24 28 L28 14 L52 14 L52 28 Z" 
-      fill="#bfdbfe" 
-      stroke="#13221C" 
-      strokeWidth="2" 
+    <path
+      d="M24 28 L28 14 L52 14 L52 28 Z"
+      fill="#bfdbfe"
+      stroke="#13221C"
+      strokeWidth="2"
     />
-    <path 
-      d="M56 28 L56 14 L78 14 L84 28 Z" 
-      fill="#bfdbfe" 
-      stroke="#13221C" 
-      strokeWidth="2" 
+    <path
+      d="M56 28 L56 14 L78 14 L84 28 Z"
+      fill="#bfdbfe"
+      stroke="#13221C"
+      strokeWidth="2"
     />
-    <path 
-      d="M87 28 L87 16 L92 18 L94 28 Z" 
-      fill="#bfdbfe" 
-      stroke="#13221C" 
-      strokeWidth="2" 
+    <path
+      d="M87 28 L87 16 L92 18 L94 28 Z"
+      fill="#bfdbfe"
+      stroke="#13221C"
+      strokeWidth="2"
     />
     {/* Door lines */}
     <line x1="54" y1="14" x2="54" y2="46" stroke="#13221C" strokeWidth="2" />
@@ -144,16 +144,16 @@ export default function AnimatedCityScene() {
       flexDirection: 'column',
       justifyContent: 'flex-end'
     }}>
-      
+
       {/* Background clouds */}
-      <motion.div 
+      <motion.div
         animate={{ left: ['100%', '-20%'] }}
         transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
         style={{ position: 'absolute', top: 40, fontSize: 40, opacity: 0.8 }}
       >
         ☁️
       </motion.div>
-      <motion.div 
+      <motion.div
         animate={{ left: ['100%', '-20%'] }}
         transition={{ repeat: Infinity, duration: 35, ease: "linear", delay: 5 }}
         style={{ position: 'absolute', top: 80, fontSize: 30, opacity: 0.6 }}
@@ -163,11 +163,11 @@ export default function AnimatedCityScene() {
 
       {/* Buildings Area */}
       <div style={{ position: 'absolute', bottom: 120, left: 0, width: '100%', height: 200, display: 'flex', alignItems: 'flex-end', paddingLeft: 40 }}>
-        
+
         {/* Main Coworking Building */}
-        <div style={{ 
-          width: 180, 
-          height: 220, 
+        <div style={{
+          width: 180,
+          height: 220,
           background: 'linear-gradient(135deg, rgba(34, 211, 238, 0.45) 0%, rgba(14, 116, 144, 0.25) 50%, rgba(23, 79, 80, 0.15) 100%)',
           backdropFilter: 'blur(6px)',
           WebkitBackdropFilter: 'blur(6px)',
@@ -234,22 +234,22 @@ export default function AnimatedCityScene() {
             <img src="/logo.png" alt="MOWS Logo" style={{ height: 18, objectFit: 'contain', filter: 'brightness(0)' }} />
             <span style={{ fontSize: 13, fontWeight: 900, color: '#13221C', letterSpacing: '0.04em', textTransform: 'uppercase', fontFamily: "'Clash Grotesk', sans-serif" }}>mows</span>
           </div>
-          
+
           {/* Top Floor Windows */}
-          <div style={{ 
-            position: 'absolute', 
-            bottom: 135, 
-            display: 'grid', 
-            gridTemplateColumns: '1fr 1fr', 
-            gap: 15, 
-            width: '70%', 
-            zIndex: 5 
+          <div style={{
+            position: 'absolute',
+            bottom: 135,
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: 15,
+            width: '70%',
+            zIndex: 5
           }}>
             {/* Upside Left Window (with 4 working people silhouettes) */}
-            <div style={{ 
-              height: 30, 
-              background: 'linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)', 
-              border: borderStyle, 
+            <div style={{
+              height: 30,
+              background: 'linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)',
+              border: borderStyle,
               boxShadow: 'inset 2px 2px 4px rgba(255,255,255,0.9), 2px 2px 0px rgba(19,34,28,0.15)',
               position: 'relative',
               overflow: 'hidden'
@@ -258,7 +258,7 @@ export default function AnimatedCityScene() {
               <div style={{ position: 'absolute', bottom: 0, left: '48%', width: 3, height: 6, backgroundColor: '#13221C' }}></div>
               {/* Round tabletop (oval profile) */}
               <div style={{ position: 'absolute', bottom: 5, left: '32%', width: '36%', height: 2, backgroundColor: '#13221C', borderRadius: '50%' }}></div>
-              
+
               {/* Person 1 (front left) */}
               <div style={{ position: 'absolute', bottom: 3, left: '20%', display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 3 }}>
                 <div style={{ width: 4, height: 4, borderRadius: '50%', backgroundColor: '#13221C' }}></div>
@@ -299,44 +299,44 @@ export default function AnimatedCityScene() {
             </div>
 
             {/* Upside Right Window */}
-            <div style={{ 
-              height: 30, 
-              background: 'linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)', 
-              border: borderStyle, 
-              boxShadow: 'inset 2px 2px 4px rgba(255,255,255,0.9), 2px 2px 0px rgba(19,34,28,0.15)' 
+            <div style={{
+              height: 30,
+              background: 'linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)',
+              border: borderStyle,
+              boxShadow: 'inset 2px 2px 4px rgba(255,255,255,0.9), 2px 2px 0px rgba(19,34,28,0.15)'
             }}></div>
           </div>
 
           {/* Bottom Floor Windows */}
-          <div style={{ 
-            position: 'absolute', 
-            bottom: 65, 
-            display: 'grid', 
-            gridTemplateColumns: '1fr 1fr', 
-            gap: 15, 
-            width: '70%', 
-            zIndex: 5 
+          <div style={{
+            position: 'absolute',
+            bottom: 65,
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: 15,
+            width: '70%',
+            zIndex: 5
           }}>
             {/* Bottom Left Window (Normal) */}
-            <div style={{ 
-              height: 30, 
-              background: 'linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)', 
-              border: borderStyle, 
-              boxShadow: 'inset 2px 2px 4px rgba(255,255,255,0.9), 2px 2px 0px rgba(19,34,28,0.15)' 
+            <div style={{
+              height: 30,
+              background: 'linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)',
+              border: borderStyle,
+              boxShadow: 'inset 2px 2px 4px rgba(255,255,255,0.9), 2px 2px 0px rgba(19,34,28,0.15)'
             }}></div>
 
             {/* Bottom Right Window (Man working at a desk) */}
-            <div style={{ 
-              height: 30, 
-              background: 'linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)', 
-              border: borderStyle, 
+            <div style={{
+              height: 30,
+              background: 'linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)',
+              border: borderStyle,
               boxShadow: 'inset 2px 2px 4px rgba(255,255,255,0.9), 2px 2px 0px rgba(19,34,28,0.15)',
               position: 'relative',
               overflow: 'hidden'
             }}>
               {/* Working desk */}
               <div style={{ position: 'absolute', bottom: 3, left: '10%', width: '80%', height: 3, backgroundColor: '#13221C', borderRadius: 1.5 }}></div>
-              
+
               {/* Laptop screen */}
               <div style={{ position: 'absolute', bottom: 6, right: '25%', width: 7, height: 5, backgroundColor: '#13221C', borderRadius: 1 }}></div>
               <div style={{ position: 'absolute', bottom: 5, right: '23%', width: 9, height: 1.5, backgroundColor: '#13221C' }}></div>
@@ -366,16 +366,16 @@ export default function AnimatedCityScene() {
           </div>
 
           {/* Floor separator slab (divides into 2 storeys) */}
-          <div style={{ 
-            position: 'absolute', 
-            bottom: 106, 
-            left: 0, 
-            width: '100%', 
-            height: 8, 
-            backgroundColor: '#ffffff', 
+          <div style={{
+            position: 'absolute',
+            bottom: 106,
+            left: 0,
+            width: '100%',
+            height: 8,
+            backgroundColor: '#ffffff',
             borderTop: borderStyle,
             borderBottom: borderStyle,
-            zIndex: 6 
+            zIndex: 6
           }}></div>
 
           {/* Door */}
@@ -383,10 +383,10 @@ export default function AnimatedCityScene() {
         </div>
 
         {/* Cafe */}
-        <div style={{ 
-          width: 155, 
-          height: 140, 
-          backgroundColor: '#ffffff', 
+        <div style={{
+          width: 155,
+          height: 140,
+          backgroundColor: '#ffffff',
           border: borderStyle,
           borderLeft: 'none',
           position: 'relative',
@@ -413,26 +413,26 @@ export default function AnimatedCityScene() {
           }}>CAFE</div>
 
           {/* Awning (Striped Canvas) */}
-          <div style={{ 
-            position: 'absolute', 
-            top: 32, 
-            width: '110%', 
-            left: '-5%', 
-            height: 20, 
-            background: 'repeating-linear-gradient(90deg, #174F50, #174F50 12px, #ffffff 12px, #ffffff 24px)', 
-            border: borderStyle, 
-            borderRadius: 4, 
-            boxShadow: '2px 2px 0px rgba(19,34,28,0.2)' 
+          <div style={{
+            position: 'absolute',
+            top: 32,
+            width: '110%',
+            left: '-5%',
+            height: 20,
+            background: 'repeating-linear-gradient(90deg, #174F50, #174F50 12px, #ffffff 12px, #ffffff 24px)',
+            border: borderStyle,
+            borderRadius: 4,
+            boxShadow: '2px 2px 0px rgba(19,34,28,0.2)'
           }}></div>
-          
+
           {/* Storefront Layout (Window & Door side-by-side) */}
           <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, width: '100%', padding: '0 12px', boxSizing: 'border-box', marginBottom: 0 }}>
             {/* Cafe window */}
-            <div style={{ 
-              flex: 1, 
-              height: 42, 
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(186,230,253,0.4) 100%)', 
-              border: borderStyle, 
+            <div style={{
+              flex: 1,
+              height: 42,
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(186,230,253,0.4) 100%)',
+              border: borderStyle,
               position: 'relative',
               boxShadow: 'inset 2px 2px 4px rgba(255,255,255,0.8)',
               marginBottom: 16
@@ -441,11 +441,11 @@ export default function AnimatedCityScene() {
               <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.4) 20%, transparent 21%)', pointerEvents: 'none' }}></div>
             </div>
             {/* Cafe door */}
-            <div style={{ 
-              width: 30, 
-              height: 68, 
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(186,230,253,0.4) 100%)', 
-              border: borderStyle, 
+            <div style={{
+              width: 30,
+              height: 68,
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(186,230,253,0.4) 100%)',
+              border: borderStyle,
               borderBottom: 'none',
               position: 'relative',
               boxShadow: 'inset 2px 2px 4px rgba(255,255,255,0.8)'
@@ -468,16 +468,16 @@ export default function AnimatedCityScene() {
             {/* Umbrella Pole */}
             <div style={{ position: 'absolute', bottom: 0, left: '48%', width: 2, height: 34, backgroundColor: '#13221C' }}></div>
             {/* Umbrella Striped Canopy */}
-            <div style={{ 
-              position: 'absolute', 
-              bottom: 34, 
-              left: '10%', 
-              width: '80%', 
-              height: 14, 
-              background: 'repeating-linear-gradient(90deg, #174F50, #174F50 8px, #ffffff 8px, #ffffff 16px)', 
-              border: borderStyle, 
-              borderRadius: '14px 14px 0 0', 
-              boxShadow: '1px 1px 0px rgba(0,0,0,0.15)' 
+            <div style={{
+              position: 'absolute',
+              bottom: 34,
+              left: '10%',
+              width: '80%',
+              height: 14,
+              background: 'repeating-linear-gradient(90deg, #174F50, #174F50 8px, #ffffff 8px, #ffffff 16px)',
+              border: borderStyle,
+              borderRadius: '14px 14px 0 0',
+              boxShadow: '1px 1px 0px rgba(0,0,0,0.15)'
             }}></div>
 
             {/* Table */}
@@ -546,11 +546,11 @@ export default function AnimatedCityScene() {
           {/* Corporate windows (2 columns, 6 rows grid) */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 12px', width: '70%', position: 'relative', zIndex: 5 }}>
             {[...Array(12)].map((_, i) => (
-              <div key={i} style={{ 
-                height: 18, 
-                background: 'linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)', 
+              <div key={i} style={{
+                height: 18,
+                background: 'linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)',
                 border: borderStyle,
-                boxShadow: 'inset 1px 1px 2px rgba(255,255,255,0.9), 1px 1px 0px rgba(0,0,0,0.1)' 
+                boxShadow: 'inset 1px 1px 2px rgba(255,255,255,0.9), 1px 1px 0px rgba(0,0,0,0.1)'
               }}></div>
             ))}
           </div>
@@ -586,11 +586,11 @@ export default function AnimatedCityScene() {
           {/* Corporate windows (2 columns, 7 rows grid) */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 10px', width: '70%', position: 'relative', zIndex: 5 }}>
             {[...Array(14)].map((_, i) => (
-              <div key={i} style={{ 
-                height: 18, 
-                background: 'linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)', 
+              <div key={i} style={{
+                height: 18,
+                background: 'linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)',
                 border: borderStyle,
-                boxShadow: 'inset 1px 1px 2px rgba(255,255,255,0.9), 1px 1px 0px rgba(0,0,0,0.1)' 
+                boxShadow: 'inset 1px 1px 2px rgba(255,255,255,0.9), 1px 1px 0px rgba(0,0,0,0.1)'
               }}></div>
             ))}
           </div>
@@ -599,13 +599,13 @@ export default function AnimatedCityScene() {
       </div>
 
       {/* Parking Lot (Parallel) */}
-      <div style={{ 
-        position: 'absolute', 
-        bottom: 60, 
-        left: 0, 
-        width: '100%', 
-        height: 60, 
-        backgroundColor: '#94a3b8', 
+      <div style={{
+        position: 'absolute',
+        bottom: 60,
+        left: 0,
+        width: '100%',
+        height: 60,
+        backgroundColor: '#94a3b8',
         borderTop: borderStyle,
         display: 'flex',
         alignItems: 'flex-end',
@@ -618,11 +618,11 @@ export default function AnimatedCityScene() {
         ))}
 
         {/* Static Parked Car */}
-        <div style={{ 
-          position: 'absolute', 
+        <div style={{
+          position: 'absolute',
           left: 45, // inside slot 1
           bottom: 4,
-          width: 70, 
+          width: 70,
           height: 30,
         }}>
           <SedanSVG color="#fde047" />
@@ -630,13 +630,13 @@ export default function AnimatedCityScene() {
       </div>
 
       {/* Road */}
-      <div style={{ 
-        position: 'absolute', 
-        bottom: 0, 
-        left: 0, 
-        width: '100%', 
-        height: 60, 
-        backgroundColor: '#334155', 
+      <div style={{
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        width: '100%',
+        height: 60,
+        backgroundColor: '#334155',
         borderTop: borderStyle,
         display: 'flex',
         alignItems: 'center'
