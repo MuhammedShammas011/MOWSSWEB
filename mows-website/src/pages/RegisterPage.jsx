@@ -2,6 +2,11 @@ import { useState, useRef, useCallback } from 'react';
 import useSEO from '../hooks/useSEO';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, Camera, FileText, X, CheckCircle, AlertCircle, User, Mail, Phone, ChevronDown, Eye, EyeOff, RotateCw } from 'lucide-react';
+import {
+  AGREEMENT_TITLE,
+  AGREEMENT_SECTIONS,
+  AGREEMENT_ACKNOWLEDGEMENT,
+} from '../data/coworkingAgreement';
 
 const API_BASE = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
 
@@ -1076,14 +1081,52 @@ export default function RegisterPage({ onNavigate }) {
                     <div style={{ width: 36, height: 36, background: C.yellow, border: `2px solid ${C.dark}`, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: `3px 3px 0px ${C.dark}`, flexShrink: 0 }}>
                       <span style={{ fontSize: 18 }}>📋</span>
                     </div>
-                    <h3 style={{ fontSize: 16, fontWeight: 900, color: C.dark, margin: 0, textTransform: 'uppercase', letterSpacing: '0.03em' }}>
-                      Declaration & Consent
+                    <h3 style={{ fontSize: 15, fontWeight: 900, color: C.dark, margin: 0, textTransform: 'uppercase', letterSpacing: '0.02em' }}>
+                      {AGREEMENT_TITLE}
                     </h3>
                   </div>
 
-                  <div style={{ background: 'rgba(23,79,80,0.04)', border: `2px solid rgba(23,79,80,0.15)`, borderRadius: 10, padding: '1rem', marginBottom: 20 }}>
+                  {/* Full Agreement Scroll Box */}
+                  <div style={{
+                    background: '#fafafa',
+                    border: `2px solid ${C.dark}`,
+                    borderRadius: 12,
+                    padding: '1rem 1.25rem',
+                    marginBottom: 18,
+                    maxHeight: 280,
+                    overflowY: 'auto',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 16,
+                  }}>
+                    {AGREEMENT_SECTIONS.map((sec) => (
+                      <div key={sec.title}>
+                        <h4 style={{ fontSize: 12, fontWeight: 900, color: C.dark, margin: '0 0 6px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                          {sec.title}
+                        </h4>
+                        {sec.paragraphs.map((p, idx) => (
+                          <p key={idx} style={{ fontSize: 12, color: C.dark, fontWeight: 600, margin: idx > 0 ? '6px 0 0' : 0, lineHeight: 1.65 }}>
+                            {p}
+                          </p>
+                        ))}
+                        {sec.bullets.length > 0 && (
+                          <ul style={{ paddingLeft: 18, margin: sec.paragraphs.length ? '6px 0 0' : 0, display: 'flex', flexDirection: 'column', gap: 5 }}>
+                            {sec.bullets.map((b, idx) => (
+                              <li key={idx} style={{ fontSize: 12, color: C.dark, fontWeight: 600, lineHeight: 1.6 }}>{b}</li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Acknowledgement */}
+                  <div style={{ background: 'rgba(23,79,80,0.05)', border: `2px solid rgba(23,79,80,0.2)`, borderRadius: 10, padding: '1rem', marginBottom: 20 }}>
+                    <h4 style={{ fontSize: 12, fontWeight: 900, color: C.dark, margin: '0 0 6px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      ACKNOWLEDGEMENT
+                    </h4>
                     <p style={{ fontSize: 13, color: C.dark, fontWeight: 600, margin: 0, lineHeight: 1.7 }}>
-                      I hereby declare that the information provided in this registration form is true, complete and accurate. I confirm that the identity documents submitted belong to me and are genuine. I agree to comply with the applicable rules and regulations of MOWS HUB. I acknowledge the Privacy Policy and consent to the collection and processing of my information and identity documents for customer registration and verification purposes as described in the policy.
+                      {AGREEMENT_ACKNOWLEDGEMENT}
                     </p>
                   </div>
 
@@ -1095,18 +1138,20 @@ export default function RegisterPage({ onNavigate }) {
                       style={{ width: 22, height: 22, accentColor: C.teal, cursor: 'pointer', marginTop: 1, flexShrink: 0 }}
                     />
                     <span style={{ fontSize: 13, color: C.dark, fontWeight: 700, lineHeight: 1.5 }}>
-                      I have read and agree to the{' '}
+                      I have read, understood, and agree to the{' '}
                       <a
                         href="/terms"
-                        onClick={e => { e.preventDefault(); onNavigate && onNavigate('terms'); }}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         style={{ color: C.teal, fontWeight: 900, textDecoration: 'underline' }}
                       >
-                        Terms & Conditions
+                        Coworking Space Agreement – Terms & Conditions
                       </a>{' '}
                       and{' '}
                       <a
                         href="/privacy"
-                        onClick={e => { e.preventDefault(); onNavigate && onNavigate('privacy'); }}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         style={{ color: C.teal, fontWeight: 900, textDecoration: 'underline' }}
                       >
                         Privacy Policy
