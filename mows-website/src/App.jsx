@@ -11,6 +11,10 @@ import EventsPage from './pages/EventsPage';
 import CustomPackagePage from './pages/CustomPackagePage';
 import AmenityDetailPage from './pages/AmenityDetailPage';
 import AboutPage from './pages/AboutPage';
+import RegisterPage from './pages/RegisterPage';
+import AdminRegistrationsPage from './pages/AdminRegistrationsPage';
+import TermsPage from './pages/TermsPage';
+import PrivacyPage from './pages/PrivacyPage';
 import FAQ from './components/FAQ';
 import { AnimatePresence } from 'framer-motion';
 import AnimatedPage from './components/AnimatedPage';
@@ -19,6 +23,8 @@ export default function App() {
   const [page, setPage] = useState(() => {
     const path = window.location.pathname.replace(/^\/|\/$/g, '');
     if (path.startsWith('amenity-')) return 'amenity';
+    // Map URL segments to page keys
+    if (path === 'admin/registrations') return 'admin/registrations';
     return path || 'home';
   });
   const [bookingPlan, setBookingPlan] = useState('');
@@ -34,6 +40,8 @@ export default function App() {
       if (path.startsWith('amenity-')) {
         setAmenitySlug(path.replace('amenity-', ''));
         setPage('amenity');
+      } else if (path === 'admin/registrations') {
+        setPage('admin/registrations');
       } else {
         setPage(path || 'home');
       }
@@ -111,16 +119,21 @@ export default function App() {
       case 'about': return <AnimatedPage key="about"><AboutPage onNavigate={navigateTo} /></AnimatedPage>;
       case 'custom-package': return <AnimatedPage key="custom-package"><CustomPackagePage onNavigate={navigateTo} /></AnimatedPage>;
       case 'amenity': return <AnimatedPage key={`amenity-${amenitySlug}`}><AmenityDetailPage amenitySlug={amenitySlug} onNavigate={navigateTo} /></AnimatedPage>;
+      case 'register': return <AnimatedPage key="register"><RegisterPage onNavigate={navigateTo} /></AnimatedPage>;
+      case 'admin/registrations': return <AnimatedPage key="admin-registrations"><AdminRegistrationsPage onNavigate={navigateTo} /></AnimatedPage>;
+      case 'terms': return <AnimatedPage key="terms"><TermsPage onNavigate={navigateTo} /></AnimatedPage>;
+      case 'privacy': return <AnimatedPage key="privacy"><PrivacyPage onNavigate={navigateTo} /></AnimatedPage>;
       default: return <AnimatedPage key="home"><HomePage onNavigate={navigateTo} /></AnimatedPage>;
     }
   }
 
-  const noFooter = ['booking', 'custom-package'];
+  const noFooter = ['booking', 'custom-package', 'register', 'admin/registrations'];
+  const noNavbar = ['register', 'admin/registrations'];
 
   return (
     <div style={{ minHeight: '100vh', background: 'transparent' }}>
       <link href="https://api.fontshare.com/v2/css?f[]=clash-grotesk@200,300,400,500,600,700&display=swap" rel="stylesheet" />
-      <Navbar currentPage={page} onNavigate={navigateTo} />
+      {!noNavbar.includes(page) && <Navbar currentPage={page} onNavigate={navigateTo} />}
       <AnimatePresence mode="wait">
         {renderPage()}
       </AnimatePresence>

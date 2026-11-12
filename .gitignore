@@ -4,3 +4,10 @@ dist/
 *.local
 .env
 .env.*
+
+# KYC document uploads (private — never commit to git)
+mows-backend/uploads/
+# SQLite database (contains PII — never commit)
+mows-backend/data/
+# Backend logs
+mows-backend/server.log
