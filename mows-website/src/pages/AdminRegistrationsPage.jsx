@@ -1,13 +1,49 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Filter, Eye, CheckCircle, XCircle, Clock, ChevronDown, X, FileText, Download, Shield } from 'lucide-react';
+import { Search, Eye, CheckCircle, XCircle, Clock, ChevronDown, X, FileText, Download, Shield } from 'lucide-react';
 
-const API_BASE = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
+const API_BASE = (
+  import.meta.env.VITE_API_BASE_URL ||
+  import.meta.env.VITE_API_URL ||
+  (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:5000' : '')
+).replace(/\/$/, '');
 
-function resolveApiUrl(path) {
+function resolveApiUrl(path, token) {
   if (!path) return '';
-  if (/^https?:\/\//i.test(path)) return path;
-  return `${API_BASE}${path}`;
+  if (/^(https?:\/\/|data:|blob:)/i.test(path)) return path;
+  let fullUrl = `${API_BASE}${path.startsWith('/') ? '' : '/'}${path}`;
+  if (token && fullUrl.startsWith('http') && !fullUrl.includes('token=')) {
+    fullUrl += (fullUrl.includes('?') ? '&' : '?') + `token=${encodeURIComponent(token)}`;
+  }
+  return fullUrl;
+}
+
+function getLocalRegistrations() {
+  try {
+    return JSON.parse(localStorage.getItem('mows_local_registrations') || '[]');
+  } catch {
+    return [];
+  }
+}
+
+function mergeRegistrations(backendList = [], localList = []) {
+  const map = new Map();
+  backendList.forEach(r => {
+    if (r.registrationId) map.set(r.registrationId, r);
+    if (r.id) map.set(r.id, r);
+    if (r.email) map.set(r.email.toLowerCase(), r);
+  });
+  const merged = [...backendList];
+  localList.forEach(lr => {
+    const keyId = lr.registrationId || lr.id;
+    const keyEmail = (lr.email || '').toLowerCase();
+    if (!map.has(keyId) && (!keyEmail || !map.has(keyEmail))) {
+      merged.push({ ...lr, isLocalOnly: true });
+      map.set(keyId, lr);
+      if (keyEmail) map.set(keyEmail, lr);
+    }
+  });
+  return merged.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 }
 
 // ── Design tokens ────────────────────────────────────────────────────────────
@@ -82,7 +118,7 @@ function RegistrationModal({ reg, adminToken, onClose, onUpdateStatus }) {
   const [previewDoc, setPreviewDoc] = useState(null);
 
   const photoDoc = (reg.documents || []).find(d => d.name === 'customerPhoto');
-  const photoUrl = photoDoc ? resolveApiUrl(photoDoc.url) : '';
+  const photoUrl = photoDoc ? resolveApiUrl(photoDoc.url, adminToken) : '';
 
   async function updateStatus(status) {
     setSaving(true);
@@ -134,7 +170,7 @@ function RegistrationModal({ reg, adminToken, onClose, onUpdateStatus }) {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            {photoUrl && (
+            {photoUrl ? (
               <img
                 src={photoUrl}
                 alt={reg.fullName}
@@ -147,6 +183,21 @@ function RegistrationModal({ reg, adminToken, onClose, onUpdateStatus }) {
                   flexShrink: 0,
                 }}
               />
+            ) : (
+              <div
+                style={{
+                  width: 56, height: 56,
+                  borderRadius: 12,
+                  background: C.yellow,
+                  border: `3px solid ${C.dark}`,
+                  boxShadow: `3px 3px 0px ${C.dark}`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontWeight: 900, fontSize: 20, color: C.dark,
+                  flexShrink: 0,
+                }}
+              >
+                {(reg.fullName || 'M').charAt(0).toUpperCase()}
+              </div>
             )}
             <div>
               <h2 style={{ fontSize: 20, fontWeight: 900, color: C.dark, margin: 0 }}>{reg.fullName}</h2>
@@ -192,7 +243,7 @@ function RegistrationModal({ reg, adminToken, onClose, onUpdateStatus }) {
             ) : reg.documents.map((doc, i) => {
               const isImg = isImageDoc(doc);
               const isPdf = isPdfDoc(doc);
-              const docUrl = resolveApiUrl(doc.url);
+              const docUrl = resolveApiUrl(doc.url, adminToken);
               return (
                 <div key={i} style={{ background: 'rgba(23,79,80,0.04)', border: `2px solid ${C.dark}`, borderRadius: 12, overflow: 'hidden' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', flexWrap: 'wrap' }}>
@@ -342,7 +393,7 @@ export default function AdminRegistrationsPage({ onNavigate }) {
   const [filterNationality, setFilterNationality] = useState('all');
   const [filterIdType, setFilterIdType] = useState('all');
   const [selectedReg, setSelectedReg] = useState(null);
-  const [isDemoMode, setIsDemoMode] = useState(false);
+  const [connectionError, setConnectionError] = useState('');
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -351,6 +402,8 @@ export default function AdminRegistrationsPage({ onNavigate }) {
       return;
     }
     setLoading(true);
+    setAuthError('');
+    setConnectionError('');
     try {
       const r = await fetch(`${API_BASE}/api/admin/registrations`, {
         headers: { 'x-admin-token': adminPass },
@@ -364,20 +417,20 @@ export default function AdminRegistrationsPage({ onNavigate }) {
       }
       const data = await r.json();
       if (data.registrations) {
-        setRegistrations(data.registrations);
-        setIsDemoMode(false);
+        const local = getLocalRegistrations();
+        const merged = mergeRegistrations(data.registrations, local);
+        setRegistrations(merged);
         setAuthed(true);
-        setAuthError('');
       } else {
         setAuthError(data.message || 'Authentication failed.');
       }
     } catch {
-      // Fallback when backend is offline
+      // Backend offline fallback - check password and load real locally cached registrations
       if (adminPass === 'mowsadmin2026') {
-        setRegistrations(DEMO_DATA);
-        setIsDemoMode(true);
+        const local = getLocalRegistrations();
+        setRegistrations(local);
         setAuthed(true);
-        setAuthError('');
+        setConnectionError('Backend server offline. Displaying local records.');
       } else {
         setAuthError('Incorrect admin password.');
       }
@@ -388,6 +441,7 @@ export default function AdminRegistrationsPage({ onNavigate }) {
 
   async function loadRegistrations(token = adminPass) {
     setLoading(true);
+    setConnectionError('');
     try {
       const r = await fetch(`${API_BASE}/api/admin/registrations`, {
         headers: { 'x-admin-token': token },
@@ -396,22 +450,28 @@ export default function AdminRegistrationsPage({ onNavigate }) {
       if (!contentType.includes('application/json')) throw new Error('Offline');
       const data = await r.json();
       if (data.registrations) {
-        setRegistrations(data.registrations);
-        setIsDemoMode(false);
+        const local = getLocalRegistrations();
+        setRegistrations(mergeRegistrations(data.registrations, local));
       } else {
-        setRegistrations(DEMO_DATA);
-        setIsDemoMode(true);
+        setRegistrations(getLocalRegistrations());
       }
     } catch {
-      setRegistrations(DEMO_DATA);
-      setIsDemoMode(true);
+      setRegistrations(getLocalRegistrations());
+      setConnectionError('Backend server offline. Displaying local records.');
     } finally {
       setLoading(false);
     }
   }
 
   function updateLocalStatus(id, status, notes) {
-    setRegistrations(prev => prev.map(r => r.id === id ? { ...r, status, adminNotes: notes } : r));
+    setRegistrations(prev => prev.map(r => (r.id === id || r.registrationId === id) ? { ...r, status, adminNotes: notes } : r));
+    try {
+      const list = JSON.parse(localStorage.getItem('mows_local_registrations') || '[]');
+      const updated = list.map(r => (r.id === id || r.registrationId === id) ? { ...r, status, adminNotes: notes } : r);
+      localStorage.setItem('mows_local_registrations', JSON.stringify(updated));
+    } catch (err) {
+      console.warn('Failed to update local status:', err);
+    }
   }
 
   // Filter logic
@@ -510,17 +570,17 @@ export default function AdminRegistrationsPage({ onNavigate }) {
       </div>
 
       <div style={{ maxWidth: 1400, margin: '0 auto', padding: 'clamp(1.5rem, 3vw, 2.5rem) clamp(1rem, 2vw, 2rem)' }}>
-        {isDemoMode && (
-          <div style={{ background: '#fff7ed', border: `2px solid ${C.orange}`, borderRadius: 10, padding: '10px 14px', marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-            <span style={{ fontSize: 12, fontWeight: 800, color: C.orange }}>
-              Demo Mode: Backend server unreachable — showing sample records without uploaded files.
+        {connectionError && (
+          <div style={{ background: '#fff7ed', border: `2px solid ${C.orange}`, borderRadius: 10, padding: '12px 16px', marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+            <span style={{ fontSize: 13, fontWeight: 800, color: C.orange }}>
+              ⚠️ {connectionError}
             </span>
             <button
               type="button"
               onClick={() => loadRegistrations()}
-              style={{ background: C.orange, color: '#fff', border: 'none', borderRadius: 6, padding: '6px 12px', fontSize: 11, fontWeight: 800, cursor: 'pointer' }}
+              style={{ background: C.orange, color: '#fff', border: 'none', borderRadius: 6, padding: '6px 14px', fontSize: 11, fontWeight: 800, cursor: 'pointer' }}
             >
-              Retry Connection
+              Retry Backend
             </button>
           </div>
         )}
@@ -559,9 +619,9 @@ export default function AdminRegistrationsPage({ onNavigate }) {
           </div>
 
           {[
-            { key: 'filterStatus', state: filterStatus, setter: setFilterStatus, label: 'Status', options: [['all','All Status'],['pending','Pending'],['approved','Approved'],['rejected','Rejected']] },
-            { key: 'filterNat', state: filterNationality, setter: setFilterNationality, label: 'Category', options: [['all','All'],['indian','Indian'],['foreign','Foreign']] },
-            { key: 'filterId', state: filterIdType, setter: setFilterIdType, label: 'ID Type', options: [['all','All ID Types'],['aadhaar','Aadhaar'],['pan','PAN'],['passport','Passport']] },
+            { key: 'filterStatus', state: filterStatus, setter: setFilterStatus, label: 'Status', options: [['all', 'All Status'], ['pending', 'Pending'], ['approved', 'Approved'], ['rejected', 'Rejected']] },
+            { key: 'filterNat', state: filterNationality, setter: setFilterNationality, label: 'Category', options: [['all', 'All'], ['indian', 'Indian'], ['foreign', 'Foreign']] },
+            { key: 'filterId', state: filterIdType, setter: setFilterIdType, label: 'ID Type', options: [['all', 'All ID Types'], ['aadhaar', 'Aadhaar'], ['pan', 'PAN'], ['passport', 'Passport']] },
           ].map(f => (
             <div key={f.key} style={{ position: 'relative', flexShrink: 0 }}>
               <select
@@ -587,8 +647,23 @@ export default function AdminRegistrationsPage({ onNavigate }) {
           <div style={{ textAlign: 'center', padding: '4rem', color: C.teal, fontWeight: 700, fontSize: 15 }}>Loading registrations...</div>
         ) : filtered.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '4rem', background: '#fff', border: `3px solid ${C.dark}`, borderRadius: 16, boxShadow: `6px 6px 0px ${C.dark}` }}>
-            <p style={{ fontSize: 16, fontWeight: 800, color: C.dark, margin: '0 0 8px' }}>No registrations found</p>
-            <p style={{ fontSize: 13, color: C.teal, fontWeight: 600, margin: 0 }}>Adjust filters or search terms.</p>
+            <p style={{ fontSize: 18, fontWeight: 900, color: C.dark, margin: '0 0 8px' }}>
+              {registrations.length === 0 ? 'No registrations found yet' : 'No matching registrations'}
+            </p>
+            <p style={{ fontSize: 13, color: C.teal, fontWeight: 600, margin: '0 0 16px' }}>
+              {registrations.length === 0
+                ? 'Real registrations submitted by customers via the registration page (/register) will appear here.'
+                : 'Adjust your search terms or filter selections above.'}
+            </p>
+            {registrations.length === 0 && (
+              <button
+                type="button"
+                onClick={() => onNavigate ? onNavigate('register') : (window.location.href = '/register')}
+                style={{ background: C.yellow, color: C.dark, border: `2px solid ${C.dark}`, borderRadius: 8, padding: '10px 18px', fontSize: 13, fontWeight: 900, cursor: 'pointer', fontFamily: "'Clash Grotesk', sans-serif" }}
+              >
+                Go to Customer Registration Form →
+              </button>
+            )}
           </div>
         ) : (
           <div style={{ background: '#fff', border: `3px solid ${C.dark}`, borderRadius: 16, boxShadow: `8px 8px 0px ${C.dark}`, overflow: 'hidden' }}>
@@ -678,27 +753,3 @@ export default function AdminRegistrationsPage({ onNavigate }) {
     </div>
   );
 }
-
-// ── Demo data (shown when backend is not connected) ──────────────────────────
-const DEMO_DATA = [
-  {
-    id: '1', registrationId: 'MOWS-2026-0001', fullName: 'Mohammed Irshad', email: 'irshad@example.com',
-    phone: '+91 98765 43210', nationality: 'indian', idType: 'aadhaar', docNumber: '****1234',
-    status: 'pending', adminNotes: '', createdAt: '2026-11-10T09:30:00Z', documents: [],
-  },
-  {
-    id: '2', registrationId: 'MOWS-2026-0002', fullName: 'Fatima Al-Rashid', email: 'fatima@example.com',
-    phone: '+971 55 123 4567', nationality: 'foreign', idType: 'passport', docNumber: 'A1234567',
-    status: 'approved', adminNotes: 'Documents verified. Passport and visa valid.', createdAt: '2026-11-11T14:15:00Z', documents: [],
-  },
-  {
-    id: '3', registrationId: 'MOWS-2026-0003', fullName: 'Rahul Menon', email: 'rahul@example.com',
-    phone: '+91 99887 76655', nationality: 'indian', idType: 'pan', docNumber: 'ABCDE1234F',
-    status: 'pending', adminNotes: '', createdAt: '2026-11-12T08:00:00Z', documents: [],
-  },
-  {
-    id: '4', registrationId: 'MOWS-2026-0004', fullName: 'Sarah Johnson', email: 'sarah@example.com',
-    phone: '+1 555 987 6543', nationality: 'foreign', idType: 'passport', docNumber: 'US987654',
-    status: 'rejected', adminNotes: 'Visa document unclear. Please resubmit.', createdAt: '2026-11-09T16:45:00Z', documents: [],
-  },
-];

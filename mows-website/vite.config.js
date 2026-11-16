@@ -8,12 +8,12 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:5001',
+        target: 'http://localhost:5000',
         changeOrigin: true,
         secure: false,
       },
       '/contact.php': {
-        target: 'http://localhost:5001/api',
+        target: 'http://localhost:5000/api',
         changeOrigin: true,
         rewrite: (path) => path.replace('/contact.php', '/contact'),
       },

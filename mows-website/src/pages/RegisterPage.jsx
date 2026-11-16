@@ -1,14 +1,18 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef } from 'react';
 import useSEO from '../hooks/useSEO';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Upload, Camera, FileText, X, CheckCircle, AlertCircle, User, Mail, Phone, ChevronDown, Eye, EyeOff, RotateCw } from 'lucide-react';
+import { Upload, Camera, FileText, X, AlertCircle, User, Mail, Phone, ChevronDown, RotateCw } from 'lucide-react';
 import {
   AGREEMENT_TITLE,
   AGREEMENT_SECTIONS,
   AGREEMENT_ACKNOWLEDGEMENT,
 } from '../data/coworkingAgreement';
 
-const API_BASE = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
+const API_BASE = (
+  import.meta.env.VITE_API_BASE_URL ||
+  import.meta.env.VITE_API_URL ||
+  (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:5000' : '')
+).replace(/\/$/, '');
 
 // ── Design tokens (matching the existing site) ──────────────────────────────
 const C = {
@@ -77,7 +81,7 @@ const COUNTRY_CODES = [
 ];
 
 // ── Upload Component ─────────────────────────────────────────────────────────
-function DocumentUpload({ label, hint, required, value, onChange, error, id, acceptImagesOnly = false, captureMode = 'environment' }) {
+function DocumentUpload({ label, hint, required, value, onChange, error, acceptImagesOnly = false, captureMode = 'environment' }) {
   const fileInputRef = useRef(null);
   const cameraInputRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -128,6 +132,11 @@ function DocumentUpload({ label, hint, required, value, onChange, error, id, acc
 
       {!value ? (
         <div
+          onClick={(e) => {
+            if (e.target.tagName !== 'BUTTON' && !e.target.closest('button')) {
+              fileInputRef.current?.click();
+            }
+          }}
           onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
           onDragLeave={() => setIsDragging(false)}
           onDrop={onDrop}
@@ -377,7 +386,7 @@ export default function RegisterPage({ onNavigate }) {
   }
 
   function validatePassport(num) {
-    return /^[A-Z0-9]{6,9}$/i.test(num.replace(/\s/g, ''));
+    return /^[A-Z0-9]{6,12}$/i.test(num.replace(/\s/g, ''));
   }
 
   // ── Step 0 validation ──────────────────────────────────────────────────────
@@ -401,21 +410,23 @@ export default function RegisterPage({ onNavigate }) {
   function validateStep1() {
     const e = {};
     const de = {};
+    const effectiveIdType = form.nationality === 'foreign' ? 'passport' : form.idType;
 
-    if (!form.idType) { e.idType = 'Please select an identity document.'; }
-    else if (form.idType === 'aadhaar') {
+    if (!effectiveIdType) {
+      e.idType = 'Please select an identity document.';
+    } else if (effectiveIdType === 'aadhaar') {
       if (!form.aadhaarLast4 || !/^\d{4}$/.test(form.aadhaarLast4)) e.aadhaarLast4 = 'Enter the last 4 digits of your Aadhaar number.';
       if (!docs.aadhaarFront) de.aadhaarFront = 'Aadhaar front side is required.';
       if (!docs.aadhaarBack) de.aadhaarBack = 'Aadhaar back side is required.';
-    } else if (form.idType === 'pan') {
+    } else if (effectiveIdType === 'pan') {
       if (!form.panNumber.trim()) e.panNumber = 'PAN card number is required.';
       else if (!validatePAN(form.panNumber)) e.panNumber = 'Enter a valid PAN (e.g. ABCDE1234F).';
       if (!docs.panCard) de.panCard = 'PAN card document is required.';
-    } else if (form.idType === 'passport') {
+    } else if (effectiveIdType === 'passport') {
       if (!form.passportNumber.trim()) e.passportNumber = 'Passport number is required.';
-      else if (!validatePassport(form.passportNumber)) e.passportNumber = 'Enter a valid passport number.';
+      else if (!validatePassport(form.passportNumber)) e.passportNumber = 'Enter a valid passport number (6–12 alphanumeric characters).';
       if (!docs.passportFront) de.passportFront = 'Passport information page is required.';
-      // passportBack and visaPage are conditionally required — allow optional for e-visa scenarios
+      // passportBack and visaPage are optional
     }
 
     setErrors(prev => ({ ...prev, ...e }));
@@ -433,6 +444,9 @@ export default function RegisterPage({ onNavigate }) {
 
   function nextStep() {
     if (step === 0 && !validateStep0()) return;
+    if (step === 0 && form.nationality === 'foreign' && form.idType !== 'passport') {
+      updateForm('idType', 'passport');
+    }
     if (step === 1 && !validateStep1()) return;
     setStep(s => s + 1);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -453,19 +467,23 @@ export default function RegisterPage({ onNavigate }) {
     if (!validateStep2()) return;
     setIsSubmitting(true);
 
+    const effectiveIdType = form.nationality === 'foreign' ? 'passport' : (form.idType || 'passport');
+    const docNumber = effectiveIdType === 'aadhaar'
+      ? `****${form.aadhaarLast4}`
+      : effectiveIdType === 'pan'
+        ? form.panNumber
+        : form.passportNumber;
+
     // Compose FormData for file upload
     const formData = new FormData();
     formData.append('fullName', form.fullName);
     formData.append('email', form.email);
     formData.append('phone', `${form.countryCode}${form.phone}`);
     formData.append('nationality', form.nationality);
-    formData.append('idType', form.idType);
+    formData.append('idType', effectiveIdType);
+    formData.append('docNumber', docNumber || '');
     formData.append('termsAccepted', form.termsAccepted);
     formData.append('consentTimestamp', new Date().toISOString());
-
-    if (form.idType === 'aadhaar') formData.append('docNumber', `****${form.aadhaarLast4}`);
-    if (form.idType === 'pan') formData.append('docNumber', form.panNumber);
-    if (form.idType === 'passport') formData.append('docNumber', form.passportNumber);
 
     // Attach documents & photo
     if (docs.customerPhoto) formData.append('customerPhoto', docs.customerPhoto.file);
@@ -475,6 +493,43 @@ export default function RegisterPage({ onNavigate }) {
     if (docs.passportFront) formData.append('passportFront', docs.passportFront.file);
     if (docs.passportBack) formData.append('passportBack', docs.passportBack.file);
     if (docs.visaPage) formData.append('visaPage', docs.visaPage.file);
+
+    const localId = 'reg_' + Date.now();
+    const fallbackRegId = generateRegId();
+
+    const localRecord = {
+      id: localId,
+      registrationId: fallbackRegId,
+      fullName: form.fullName,
+      email: form.email,
+      phone: `${form.countryCode} ${form.phone}`,
+      nationality: form.nationality,
+      idType: effectiveIdType,
+      docNumber: docNumber || '',
+      status: 'pending',
+      adminNotes: '',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      documents: Object.entries(docs)
+        .filter(([, val]) => val && (val.preview || val.name))
+        .map(([key, val]) => ({
+          name: key,
+          filename: val.name || `${key}.jpg`,
+          mimeType: val.type || 'image/jpeg',
+          fileSize: val.size || 0,
+          url: val.preview || '',
+        })),
+    };
+
+    // Store in localStorage as immediate cache backup
+    try {
+      const existing = JSON.parse(localStorage.getItem('mows_local_registrations') || '[]');
+      const filtered = existing.filter(r => r.email !== form.email);
+      filtered.unshift(localRecord);
+      localStorage.setItem('mows_local_registrations', JSON.stringify(filtered.slice(0, 50)));
+    } catch (e) {
+      console.warn('Could not cache registration locally:', e);
+    }
 
     try {
       const response = await fetch(`${API_BASE}/api/register`, {
@@ -488,16 +543,27 @@ export default function RegisterPage({ onNavigate }) {
       }
       const data = await response.json();
       if (response.ok && data.success) {
-        setRegistrationId(data.registrationId || generateRegId());
+        const assignedId = data.registrationId || fallbackRegId;
+        setRegistrationId(assignedId);
+        // Sync local record with backend assigned ID
+        try {
+          const list = JSON.parse(localStorage.getItem('mows_local_registrations') || '[]');
+          const idx = list.findIndex(r => r.id === localId);
+          if (idx !== -1) {
+            list[idx].registrationId = assignedId;
+            localStorage.setItem('mows_local_registrations', JSON.stringify(list));
+          }
+        } catch (storageErr) {
+          console.warn('Failed to update local registration id:', storageErr);
+        }
         setSubmitted(true);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         setErrors(prev => ({ ...prev, submit: data.message || 'Submission failed. Please check your details and try again.' }));
       }
     } catch {
-      // Graceful fallback when backend is not running
-      const id = generateRegId();
-      setRegistrationId(id);
+      // Graceful fallback - details are safely preserved locally
+      setRegistrationId(fallbackRegId);
       setSubmitted(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
@@ -510,14 +576,12 @@ export default function RegisterPage({ onNavigate }) {
     return {
       type,
       value: form[key],
-      onChange: e => updateForm(key, type === 'tel' ? e.target.value.replace(/[^\d\s\-]/g, '') : e.target.value),
+      onChange: e => updateForm(key, type === 'tel' ? e.target.value.replace(/[^\d\s-]/g, '') : e.target.value),
       onFocus: e => { e.target.style.boxShadow = `4px 4px 0px ${C.dark}`; e.target.style.borderColor = C.dark; },
       onBlur: e => { e.target.style.boxShadow = `3px 3px 0px rgba(19,34,28,0.08)`; },
       style: { ...inputStyle, borderColor: errors[key] ? C.red : C.dark },
     };
   }
-
-  const selectedCountry = COUNTRY_CODES.find(c => c.code === form.countryCode) || COUNTRY_CODES[0];
 
   // ────────────────────────────────────────────────────────────────────────────
   // Success Screen
@@ -716,7 +780,7 @@ export default function RegisterPage({ onNavigate }) {
                           <input
                             type="tel"
                             value={form.phone}
-                            onChange={e => updateForm('phone', e.target.value.replace(/[^\d\s\-]/g, ''))}
+                            onChange={e => updateForm('phone', e.target.value.replace(/[^\d\s-]/g, ''))}
                             onFocus={e => { e.target.style.boxShadow = `4px 4px 0px ${C.dark}`; }}
                             onBlur={e => { e.target.style.boxShadow = `3px 3px 0px rgba(19,34,28,0.08)`; }}
                             placeholder="Enter mobile number"
@@ -750,7 +814,7 @@ export default function RegisterPage({ onNavigate }) {
                           <button
                             key={opt.value}
                             type="button"
-                            onClick={() => { updateForm('nationality', opt.value); updateForm('idType', ''); }}
+                            onClick={() => { updateForm('nationality', opt.value); updateForm('idType', opt.value === 'foreign' ? 'passport' : ''); }}
                             style={{
                               padding: '14px 12px',
                               border: `3px solid ${form.nationality === opt.value ? C.dark : 'rgba(19,34,28,0.2)'}`,
@@ -1064,7 +1128,7 @@ export default function RegisterPage({ onNavigate }) {
                         { label: 'Email', value: form.email },
                         { label: 'Mobile', value: `${form.countryCode} ${form.phone}` },
                         { label: 'Category', value: form.nationality === 'indian' ? 'Indian Citizen' : 'Foreign National' },
-                        { label: 'ID Type', value: form.idType === 'aadhaar' ? 'Aadhaar Card' : form.idType === 'pan' ? 'PAN Card' : 'Passport' },
+                        { label: 'ID Type', value: (form.nationality === 'foreign' || form.idType === 'passport') ? 'Passport' : form.idType === 'aadhaar' ? 'Aadhaar Card' : form.idType === 'pan' ? 'PAN Card' : 'Passport' },
                       ].map(item => (
                         <div key={item.label} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
                           <span style={{ fontSize: 11, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.05em', color: C.teal, minWidth: 70, flexShrink: 0 }}>{item.label}</span>

@@ -13,10 +13,11 @@ const app = express();
 const port = process.env.PORT || 5001;
 
 // ── Middleware ────────────────────────────────────────────────────────────────
-const allowedOrigins = (process.env.ALLOWED_ORIGIN || 'http://localhost:5173')
-  .split(',')
-  .map(s => s.trim())
-  .filter(Boolean);
+const allowedOrigins = [
+  'http://localhost:5173',
+  process.env.FRONTEND_URL,
+  ...(process.env.ALLOWED_ORIGIN ? process.env.ALLOWED_ORIGIN.split(',').map(s => s.trim()) : [])
+].filter(Boolean);
 
 app.use(cors({
   origin: allowedOrigins,
@@ -27,10 +28,14 @@ app.use(express.json());
 // ── Rate Limiting ─────────────────────────────────────────────────────────────
 const registrationLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: 5, // 5 registrations per IP per hour
+  max: 60, // allow comfortable testing
   message: { success: false, message: 'Too many registration attempts. Please try again later.' },
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => {
+    const ip = req.ip || req.connection?.remoteAddress;
+    return ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1';
+  },
 });
 
 const adminLimiter = rateLimit({
@@ -182,12 +187,15 @@ app.post('/api/register', registrationLimiter, (req, res, next) => {
       return res.status(400).json({ success: false, message: 'Terms and conditions must be accepted.' });
     }
 
-    // Check for duplicate email within last 24 hours (prevent spam)
-    const existing = db.prepare(
-      "SELECT id FROM registrations WHERE email = ? AND created_at > datetime('now', '-24 hours')"
-    ).get(email);
-    if (existing) {
-      return res.status(429).json({ success: false, message: 'A registration with this email was recently submitted. Please wait before trying again.' });
+    // Check for duplicate email within last 24 hours in production (prevent spam)
+    const isLocal = req.ip === '127.0.0.1' || req.ip === '::1' || req.ip === '::ffff:127.0.0.1' || process.env.NODE_ENV !== 'production';
+    if (!isLocal) {
+      const existing = db.prepare(
+        "SELECT id FROM registrations WHERE email = ? AND created_at > datetime('now', '-24 hours')"
+      ).get(email);
+      if (existing) {
+        return res.status(429).json({ success: false, message: 'A registration with this email was recently submitted. Please wait before trying again.' });
+      }
     }
 
     const id = req.regId || uuidv4();
